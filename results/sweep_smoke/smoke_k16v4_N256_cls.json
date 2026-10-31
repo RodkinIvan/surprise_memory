@@ -1,0 +1,94 @@
+{
+ "args": {
+  "subset": "N256_V16",
+  "objective": "cls",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": 16,
+  "expand_v": 0.25,
+  "epochs": 1.0,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 1000,
+  "eval_samples": 10000,
+  "test_samples": 10000,
+  "curriculum": 0.5,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/sweep_smoke/smoke_k16v4_N256_cls.json"
+ },
+ "n_params": 416243,
+ "steps": 3515,
+ "test": {
+  "recog_acc9": 0.038591666889190676,
+  "recog_pairwise": 0.50025625,
+  "balanced_acc": 0.50004375
+ },
+ "curve": [
+  {
+   "step": 1000,
+   "train_loss": 0.6972505591511726,
+   "train_acc": 0.50084765625,
+   "grad_norm": 0.2838311493396759,
+   "lr": 0.0008319159878011848,
+   "time": 205.38393712043762,
+   "recog_acc9": 0.024780238366127014,
+   "recog_pairwise": 0.50181875,
+   "balanced_acc": 0.4993375
+  },
+  {
+   "step": 2000,
+   "train_loss": 0.6940865684151649,
+   "train_acc": 0.49991015625,
+   "grad_norm": 0.1914781928062439,
+   "lr": 0.0004532294407907459,
+   "time": 229.9922661781311,
+   "recog_acc9": 0.01899833356142044,
+   "recog_pairwise": 0.4989625,
+   "balanced_acc": 0.50009375
+  },
+  {
+   "step": 3000,
+   "train_loss": 0.6933789403438568,
+   "train_acc": 0.499109375,
+   "grad_norm": 0.36267614364624023,
+   "lr": 0.00014683437757859327,
+   "time": 255.31128096580505,
+   "recog_acc9": 0.03777500009536743,
+   "recog_pairwise": 0.49995625,
+   "balanced_acc": 0.49989375
+  },
+  {
+   "step": 3515,
+   "train_loss": 0.6932124031400217,
+   "train_acc": 0.5028140169902913,
+   "grad_norm": 0.13184840977191925,
+   "lr": 0.0001,
+   "time": 269.30012464523315,
+   "recog_acc9": 0.035725,
+   "recog_pairwise": 0.501675,
+   "balanced_acc": 0.49996250000000003
+  }
+ ],
+ "train_time": 272.06014251708984,
+ "host": "ws006599",
+ "gpu": "NVIDIA RTX 5880 Ada Generation",
+ "code_version": {
+  "commit": null,
+  "dirty": null,
+  "files_sha256": "774cc7e8e1d32435ae5399e6868875a5715a4ac1ffcf3590085e555df2e9769e",
+  "paths": [
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-10-31 16:08:45",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

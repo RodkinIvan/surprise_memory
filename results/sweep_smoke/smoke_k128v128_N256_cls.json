@@ -1,0 +1,171 @@
+{
+ "args": {
+  "subset": "N256_V16",
+  "objective": "cls",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": 128,
+  "expand_v": 1.0,
+  "epochs": 3.0,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 1000,
+  "eval_samples": 10000,
+  "test_samples": 10000,
+  "curriculum": 0.5,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/sweep_smoke/smoke_k128v128_N256_cls.json"
+ },
+ "n_params": 729859,
+ "steps": 10546,
+ "test": {
+  "recog_acc9": 0.04255,
+  "recog_pairwise": 0.498325,
+  "balanced_acc": 0.5
+ },
+ "curve": [
+  {
+   "step": 1000,
+   "train_loss": 0.6968122807741165,
+   "train_acc": 0.49947265625,
+   "grad_norm": 0.08010447770357132,
+   "lr": 0.000980180499361903,
+   "time": 121.62693476676941,
+   "recog_acc9": 0.0175,
+   "recog_pairwise": 0.502625,
+   "balanced_acc": 0.5000125
+  },
+  {
+   "step": 2000,
+   "train_loss": 0.6934544133543968,
+   "train_acc": 0.49963671875,
+   "grad_norm": 0.10061781108379364,
+   "lr": 0.0009224678312500276,
+   "time": 166.141987323761,
+   "recog_acc9": 0.0135,
+   "recog_pairwise": 0.49989375,
+   "balanced_acc": 0.5000625
+  },
+  {
+   "step": 3000,
+   "train_loss": 0.6933063809275627,
+   "train_acc": 0.49997265625,
+   "grad_norm": 0.14353178441524506,
+   "lr": 0.000831945712386461,
+   "time": 210.50732374191284,
+   "recog_acc9": 0.02,
+   "recog_pairwise": 0.50231875,
+   "balanced_acc": 0.5000875
+  },
+  {
+   "step": 4000,
+   "train_loss": 0.6932435836195946,
+   "train_acc": 0.50069140625,
+   "grad_norm": 0.3106563091278076,
+   "lr": 0.000716587934738218,
+   "time": 254.3440191745758,
+   "recog_acc9": 0.02925,
+   "recog_pairwise": 0.5010375,
+   "balanced_acc": 0.49998750000000003
+  },
+  {
+   "step": 5000,
+   "train_loss": 0.6932019185423851,
+   "train_acc": 0.50080859375,
+   "grad_norm": 0.1724196821451187,
+   "lr": 0.0005865559807395602,
+   "time": 297.9286205768585,
+   "recog_acc9": 0.02655,
+   "recog_pairwise": 0.5009125,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 6000,
+   "train_loss": 0.6931974029541016,
+   "train_acc": 0.49969140625,
+   "grad_norm": 0.07455164194107056,
+   "lr": 0.00045330393214715114,
+   "time": 341.4116303920746,
+   "recog_acc9": 0.05105,
+   "recog_pairwise": 0.50033125,
+   "balanced_acc": 0.5000687500000001
+  },
+  {
+   "step": 7000,
+   "train_loss": 0.6931946533918381,
+   "train_acc": 0.4992578125,
+   "grad_norm": 0.084769606590271,
+   "lr": 0.00032856951812590206,
+   "time": 384.8851709365845,
+   "recog_acc9": 0.053,
+   "recog_pairwise": 0.49849375,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 8000,
+   "train_loss": 0.6931650216579437,
+   "train_acc": 0.5003046875,
+   "grad_norm": 0.07467946410179138,
+   "lr": 0.00022334017777931033,
+   "time": 428.4430465698242,
+   "recog_acc9": 0.0547,
+   "recog_pairwise": 0.49909375,
+   "balanced_acc": 0.4999875
+  },
+  {
+   "step": 9000,
+   "train_loss": 0.693153981089592,
+   "train_acc": 0.50084765625,
+   "grad_norm": 0.06312635540962219,
+   "lr": 0.0001468852132324677,
+   "time": 472.0689170360565,
+   "recog_acc9": 0.0475,
+   "recog_pairwise": 0.50179375,
+   "balanced_acc": 0.5000125
+  },
+  {
+   "step": 10000,
+   "train_loss": 0.693149182498455,
+   "train_acc": 0.50167578125,
+   "grad_norm": 0.11021716892719269,
+   "lr": 0.00010593928767924932,
+   "time": 515.730003118515,
+   "recog_acc9": 0.0311,
+   "recog_pairwise": 0.491975,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 10546,
+   "train_loss": 0.693149881594347,
+   "train_acc": 0.5021033653846154,
+   "grad_norm": 0.06443974375724792,
+   "lr": 0.0001,
+   "time": 541.7558319568634,
+   "recog_acc9": 0.04845,
+   "recog_pairwise": 0.50170625,
+   "balanced_acc": 0.5
+  }
+ ],
+ "train_time": 546.611273765564,
+ "host": "ws006345",
+ "gpu": "NVIDIA RTX 6000 Ada Generation",
+ "code_version": {
+  "commit": null,
+  "dirty": null,
+  "files_sha256": "774cc7e8e1d32435ae5399e6868875a5715a4ac1ffcf3590085e555df2e9769e",
+  "paths": [
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-10-31 16:08:45",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

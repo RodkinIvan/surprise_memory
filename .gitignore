@@ -1,0 +1,26 @@
+# router tool and its run state: not part of this repository
+router/
+*.state.json
+.router/
+CODE_VERSION.json
+logs/router/
+
+data/.cache/
+hf_data/
+__pycache__/
+logs/hostq/
+*.hostq.state.json.lock
+
+# generated dataset (published at huggingface.co/datasets/irodkin/recognition-memory; benchmark/generate.py rebuilds it)
+/data/
+# run logs
+/logs/
+logs_router_gdn2.txt
+.DS_Store
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk

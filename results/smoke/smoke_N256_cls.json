@@ -1,0 +1,92 @@
+{
+ "args": {
+  "subset": "N256_V16",
+  "objective": "cls",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": null,
+  "epochs": 0.1,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 100,
+  "eval_samples": 2000,
+  "test_samples": 5000,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/smoke/smoke_N256_cls.json"
+ },
+ "n_params": 729859,
+ "steps": 351,
+ "test": {
+  "recog_acc9": 0.0104,
+  "recog_pairwise": 0.4991375,
+  "balanced_acc": 0.4999875
+ },
+ "curve": [
+  {
+   "step": 100,
+   "train_loss": 0.7020373326539994,
+   "train_acc": 0.496953125,
+   "grad_norm": 0.4803497791290283,
+   "lr": 0.00016795677798805633,
+   "time": 109.0356559753418,
+   "recog_acc9": 0.008,
+   "recog_pairwise": 0.50184375,
+   "balanced_acc": 0.5010625
+  },
+  {
+   "step": 200,
+   "train_loss": 0.6965781825780869,
+   "train_acc": 0.5016015625,
+   "grad_norm": 0.36165714263916016,
+   "lr": 0.00018174850479578438,
+   "time": 113.86250901222229,
+   "recog_acc9": 0.0055,
+   "recog_pairwise": 0.49446875,
+   "balanced_acc": 0.49953125
+  },
+  {
+   "step": 300,
+   "train_loss": 0.696328427195549,
+   "train_acc": 0.496171875,
+   "grad_norm": 0.44790422916412354,
+   "lr": 8.793644118259116e-05,
+   "time": 118.69192838668823,
+   "recog_acc9": 0.0105,
+   "recog_pairwise": 0.495,
+   "balanced_acc": 0.50009375
+  },
+  {
+   "step": 351,
+   "train_loss": 0.6947784038151011,
+   "train_acc": 0.4987745098039216,
+   "grad_norm": 0.3050568401813507,
+   "lr": 7.04e-05,
+   "time": 121.63044857978821,
+   "recog_acc9": 0.009,
+   "recog_pairwise": 0.5013125,
+   "balanced_acc": 0.50003125
+  }
+ ],
+ "train_time": 142.30373072624207,
+ "host": "ws006345",
+ "gpu": "NVIDIA RTX 6000 Ada Generation",
+ "code_version": {
+  "commit": null,
+  "dirty": null,
+  "files_sha256": "52e31b59681b6adf81c147655eb6b9154a8d10b9bff70194dfcd3778f96e340b",
+  "paths": [
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-10-30 21:01:53",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

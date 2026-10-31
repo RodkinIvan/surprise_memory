@@ -1,0 +1,171 @@
+{
+ "args": {
+  "subset": "N64_V16",
+  "objective": "cls",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": 128,
+  "expand_v": 1.0,
+  "epochs": 3.0,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 1000,
+  "eval_samples": 10000,
+  "test_samples": 10000,
+  "curriculum": 0.5,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/sweep_smoke/smoke_k128v128_N64_cls.json"
+ },
+ "n_params": 729859,
+ "steps": 10546,
+ "test": {
+  "recog_acc9": 1.0,
+  "recog_pairwise": 1.0,
+  "balanced_acc": 1.0
+ },
+ "curve": [
+  {
+   "step": 1000,
+   "train_loss": 0.40555250747835087,
+   "train_acc": 0.7415859375,
+   "grad_norm": 0.03221311792731285,
+   "lr": 0.000980180499361903,
+   "time": 69.60730004310608,
+   "recog_acc9": 0.999,
+   "recog_pairwise": 0.999875,
+   "balanced_acc": 0.9910749999999999
+  },
+  {
+   "step": 2000,
+   "train_loss": 0.003174909493346604,
+   "train_acc": 0.99916796875,
+   "grad_norm": 0.27700039744377136,
+   "lr": 0.0009224678312500276,
+   "time": 81.70514249801636,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.9997750000000001
+  },
+  {
+   "step": 3000,
+   "train_loss": 0.013456098262437762,
+   "train_acc": 0.9960234375,
+   "grad_norm": 0.00022035447182133794,
+   "lr": 0.000831945712386461,
+   "time": 93.73416543006897,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99994375
+  },
+  {
+   "step": 4000,
+   "train_loss": 0.009163051975597213,
+   "train_acc": 0.998015625,
+   "grad_norm": 0.00012977530423086137,
+   "lr": 0.000716587934738218,
+   "time": 105.00232768058777,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.9997625
+  },
+  {
+   "step": 5000,
+   "train_loss": 0.0037494713972876666,
+   "train_acc": 0.9993515625,
+   "grad_norm": 3.5973030207969714e-06,
+   "lr": 0.0005865559807395602,
+   "time": 116.24089694023132,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99994375
+  },
+  {
+   "step": 6000,
+   "train_loss": 0.0003992613632712285,
+   "train_acc": 0.9999375,
+   "grad_norm": 7.824763770258869e-08,
+   "lr": 0.00045330393214715114,
+   "time": 127.38211488723755,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99994375
+  },
+  {
+   "step": 7000,
+   "train_loss": 0.0015353141862824958,
+   "train_acc": 0.99980859375,
+   "grad_norm": 3.5201491499492477e-08,
+   "lr": 0.00032856951812590206,
+   "time": 138.5026044845581,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 1.0
+  },
+  {
+   "step": 8000,
+   "train_loss": 0.00020187820943736012,
+   "train_acc": 0.99996484375,
+   "grad_norm": 5.204145509196678e-06,
+   "lr": 0.00022334017777931033,
+   "time": 149.61846351623535,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99999375
+  },
+  {
+   "step": 9000,
+   "train_loss": 1.8364204382503857e-08,
+   "train_acc": 1.0,
+   "grad_norm": 1.512299085959512e-08,
+   "lr": 0.0001468852132324677,
+   "time": 160.7662103176117,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 1.0
+  },
+  {
+   "step": 10000,
+   "train_loss": 2.0239658331533405e-09,
+   "train_acc": 1.0,
+   "grad_norm": 5.296330485293765e-09,
+   "lr": 0.00010593928767924932,
+   "time": 171.98108649253845,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 1.0
+  },
+  {
+   "step": 10546,
+   "train_loss": 2.262790443545605e-05,
+   "train_acc": 0.9999928456959707,
+   "grad_norm": 3.4791520775456775e-09,
+   "lr": 0.0001,
+   "time": 178.6615481376648,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 1.0
+  }
+ ],
+ "train_time": 179.89682865142822,
+ "host": "ws006345",
+ "gpu": "NVIDIA RTX 6000 Ada Generation",
+ "code_version": {
+  "commit": null,
+  "dirty": null,
+  "files_sha256": "774cc7e8e1d32435ae5399e6868875a5715a4ac1ffcf3590085e555df2e9769e",
+  "paths": [
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-10-31 16:08:45",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

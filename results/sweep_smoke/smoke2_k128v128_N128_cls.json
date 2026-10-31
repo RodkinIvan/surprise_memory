@@ -1,0 +1,171 @@
+{
+ "args": {
+  "subset": "N128_V16",
+  "objective": "cls",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": 128,
+  "expand_v": 1.0,
+  "epochs": 3.0,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 1000,
+  "eval_samples": 10000,
+  "test_samples": 10000,
+  "curriculum": 0.5,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/sweep_smoke/smoke2_k128v128_N128_cls.json"
+ },
+ "n_params": 729859,
+ "steps": 10546,
+ "test": {
+  "recog_acc9": 1.0,
+  "recog_pairwise": 1.0,
+  "balanced_acc": 1.0
+ },
+ "curve": [
+  {
+   "step": 1000,
+   "train_loss": 0.3187104461775743,
+   "train_acc": 0.80703125,
+   "grad_norm": 0.00969083234667778,
+   "lr": 0.000980180499361903,
+   "time": 66.44240999221802,
+   "recog_acc9": 0.04175,
+   "recog_pairwise": 0.60001875,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 2000,
+   "train_loss": 0.029894292856793753,
+   "train_acc": 0.9949375,
+   "grad_norm": 0.0005973102524876595,
+   "lr": 0.0009224678312500276,
+   "time": 94.93382024765015,
+   "recog_acc9": 0.003,
+   "recog_pairwise": 0.3701625,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 3000,
+   "train_loss": 0.20899694705537716,
+   "train_acc": 0.8973203125,
+   "grad_norm": 6.569124221801758,
+   "lr": 0.000831945712386461,
+   "time": 113.10094976425171,
+   "recog_acc9": 0.5417,
+   "recog_pairwise": 0.921975,
+   "balanced_acc": 0.53114375
+  },
+  {
+   "step": 4000,
+   "train_loss": 0.010413125195875408,
+   "train_acc": 0.99678125,
+   "grad_norm": 0.0008679434540681541,
+   "lr": 0.000716587934738218,
+   "time": 142.92907285690308,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.9999312499999999
+  },
+  {
+   "step": 5000,
+   "train_loss": 0.0013470340237349773,
+   "train_acc": 0.99969140625,
+   "grad_norm": 0.42130324244499207,
+   "lr": 0.0005865559807395602,
+   "time": 163.34837412834167,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99999375
+  },
+  {
+   "step": 6000,
+   "train_loss": 0.0010020281978480624,
+   "train_acc": 0.9998125,
+   "grad_norm": 0.00796220451593399,
+   "lr": 0.00045330393214715114,
+   "time": 183.93350529670715,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99973125
+  },
+  {
+   "step": 7000,
+   "train_loss": 0.0003586429418741233,
+   "train_acc": 0.9999453125,
+   "grad_norm": 5.4625757911708206e-05,
+   "lr": 0.00032856951812590206,
+   "time": 204.46300983428955,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99999375
+  },
+  {
+   "step": 8000,
+   "train_loss": 0.00024166303851571235,
+   "train_acc": 0.9999609375,
+   "grad_norm": 1.5711948435637169e-06,
+   "lr": 0.00022334017777931033,
+   "time": 224.75001072883606,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99999375
+  },
+  {
+   "step": 9000,
+   "train_loss": 0.0001013755410418098,
+   "train_acc": 0.99998828125,
+   "grad_norm": 9.729293815041729e-09,
+   "lr": 0.0001468852132324677,
+   "time": 244.70721077919006,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.9999875
+  },
+  {
+   "step": 10000,
+   "train_loss": 3.8963051399797944e-05,
+   "train_acc": 0.99999609375,
+   "grad_norm": 7.812617219826734e-09,
+   "lr": 0.00010593928767924932,
+   "time": 264.6386594772339,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99999375
+  },
+  {
+   "step": 10546,
+   "train_loss": 3.8748111062442034e-08,
+   "train_acc": 1.0,
+   "grad_norm": 5.9951621445009096e-09,
+   "lr": 0.0001,
+   "time": 276.6264021396637,
+   "recog_acc9": 1.0,
+   "recog_pairwise": 1.0,
+   "balanced_acc": 0.99999375
+  }
+ ],
+ "train_time": 279.06968235969543,
+ "host": "ws006345",
+ "gpu": "NVIDIA RTX 6000 Ada Generation",
+ "code_version": {
+  "commit": null,
+  "dirty": null,
+  "files_sha256": "56a9947d79a4c6f896b4c311747483ac71948ced6c295ed01ec16189c4ff8c3c",
+  "paths": [
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-10-31 16:19:24",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

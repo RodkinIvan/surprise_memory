@@ -1,0 +1,171 @@
+{
+ "args": {
+  "subset": "N256_V16",
+  "objective": "cls",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": 16,
+  "expand_v": 0.25,
+  "epochs": 3.0,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 1000,
+  "eval_samples": 10000,
+  "test_samples": 10000,
+  "curriculum": 0.5,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/sweep_smoke/smoke2_k16v4_N256_cls.json"
+ },
+ "n_params": 416243,
+ "steps": 10546,
+ "test": {
+  "recog_acc9": 0.02601734142303467,
+  "recog_pairwise": 0.498275,
+  "balanced_acc": 0.5
+ },
+ "curve": [
+  {
+   "step": 1000,
+   "train_loss": 0.682895633816719,
+   "train_acc": 0.54215234375,
+   "grad_norm": 0.7107670903205872,
+   "lr": 0.000980180499361903,
+   "time": 157.0796835422516,
+   "recog_acc9": 0.0088,
+   "recog_pairwise": 0.50213125,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 2000,
+   "train_loss": 0.4675922946333885,
+   "train_acc": 0.75535546875,
+   "grad_norm": 8.073538780212402,
+   "lr": 0.0009224678312500276,
+   "time": 213.17078566551208,
+   "recog_acc9": 0.021748333597183228,
+   "recog_pairwise": 0.49926875,
+   "balanced_acc": 0.4997875
+  },
+  {
+   "step": 3000,
+   "train_loss": 0.36252844443917276,
+   "train_acc": 0.84460546875,
+   "grad_norm": 6.269498825073242,
+   "lr": 0.000831945712386461,
+   "time": 274.82364439964294,
+   "recog_acc9": 0.02615,
+   "recog_pairwise": 0.4965875,
+   "balanced_acc": 0.49874375000000004
+  },
+  {
+   "step": 4000,
+   "train_loss": 0.6437072628587485,
+   "train_acc": 0.5803125,
+   "grad_norm": 0.6543611288070679,
+   "lr": 0.000716587934738218,
+   "time": 362.72616744041443,
+   "recog_acc9": 0.02578666684627533,
+   "recog_pairwise": 0.4949875,
+   "balanced_acc": 0.49986875
+  },
+  {
+   "step": 5000,
+   "train_loss": 0.6934304992556573,
+   "train_acc": 0.4998125,
+   "grad_norm": 0.24991321563720703,
+   "lr": 0.0005865559807395602,
+   "time": 434.77432465553284,
+   "recog_acc9": 0.027758810126781462,
+   "recog_pairwise": 0.501,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 6000,
+   "train_loss": 0.6933154944181442,
+   "train_acc": 0.499921875,
+   "grad_norm": 0.12490887194871902,
+   "lr": 0.00045330393214715114,
+   "time": 487.5487382411957,
+   "recog_acc9": 0.026236389207839966,
+   "recog_pairwise": 0.4984125,
+   "balanced_acc": 0.5000687500000001
+  },
+  {
+   "step": 7000,
+   "train_loss": 0.6932173938155174,
+   "train_acc": 0.5006796875,
+   "grad_norm": 0.06676320731639862,
+   "lr": 0.00032856951812590206,
+   "time": 526.4114077091217,
+   "recog_acc9": 0.02561309576034546,
+   "recog_pairwise": 0.49814375,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 8000,
+   "train_loss": 0.6931872889995575,
+   "train_acc": 0.49821484375,
+   "grad_norm": 0.05628481134772301,
+   "lr": 0.00022334017777931033,
+   "time": 554.7759141921997,
+   "recog_acc9": 0.028308215010166168,
+   "recog_pairwise": 0.499125,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 9000,
+   "train_loss": 0.6931771719455719,
+   "train_acc": 0.4990625,
+   "grad_norm": 0.03997588902711868,
+   "lr": 0.0001468852132324677,
+   "time": 605.5930349826813,
+   "recog_acc9": 0.025846548271179198,
+   "recog_pairwise": 0.49855625,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 10000,
+   "train_loss": 0.6931642407774925,
+   "train_acc": 0.4993359375,
+   "grad_norm": 0.14839550852775574,
+   "lr": 0.00010593928767924932,
+   "time": 656.8691756725311,
+   "recog_acc9": 0.027267103600502014,
+   "recog_pairwise": 0.49790625,
+   "balanced_acc": 0.5
+  },
+  {
+   "step": 10546,
+   "train_loss": 0.693153393246752,
+   "train_acc": 0.49958505036630035,
+   "grad_norm": 0.19857309758663177,
+   "lr": 0.0001,
+   "time": 686.8943774700165,
+   "recog_acc9": 0.026910476690530778,
+   "recog_pairwise": 0.5015625,
+   "balanced_acc": 0.5
+  }
+ ],
+ "train_time": 692.9269342422485,
+ "host": "ws006346",
+ "gpu": "NVIDIA RTX 6000 Ada Generation",
+ "code_version": {
+  "commit": null,
+  "dirty": null,
+  "files_sha256": "56a9947d79a4c6f896b4c311747483ac71948ced6c295ed01ec16189c4ff8c3c",
+  "paths": [
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-10-31 16:19:24",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

@@ -1,0 +1,9 @@
+{"project": "surprise_memory",
+ "sync": ["experiments/train_gdn2.py"],
+ "fetch": ["results/smoke/{name}.json"],
+ "jobs": [
+  {"name": "smoke_N16_lm", "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective lm --epochs 0.1 --eval_every 100 --eval_samples 2000 --test_samples 5000 --out results/smoke/{name}.json",
+   "gpus": 1, "gb": 6, "hosts": ["mbz_nlp2"], "expect": ["results/smoke/smoke_N16_lm.json"]},
+  {"name": "smoke_N256_cls", "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective cls --epochs 0.1 --eval_every 100 --eval_samples 2000 --test_samples 5000 --out results/smoke/{name}.json",
+   "gpus": 1, "gb": 6, "hosts": ["mbz_nlp2"], "expect": ["results/smoke/smoke_N256_cls.json"]}
+ ]}

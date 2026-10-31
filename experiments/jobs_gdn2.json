@@ -1,0 +1,235 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py"
+ ],
+ "fetch": [
+  "results/gdn2/{name}.json"
+ ],
+ "jobs": [
+  {
+   "name": "gdn2_h128_L2_N4_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N4_V16 --objective lm --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N4_lm_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N4_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N4_V16 --objective cls --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N4_cls_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N8_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N8_V16 --objective lm --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N8_lm_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N8_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N8_V16 --objective cls --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N8_cls_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N16_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective lm --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N16_lm_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N16_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N16_cls_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N32_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective lm --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N32_lm_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N32_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N32_cls_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N64_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N64_V16 --objective lm --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N64_lm_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N64_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N64_V16 --objective cls --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N64_cls_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N128_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective lm --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N128_lm_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N128_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N128_cls_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N256_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective lm --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N256_lm_s0.json"
+   ]
+  },
+  {
+   "name": "gdn2_h128_L2_N256_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective cls --epochs 10 --seed 0 --out results/gdn2/{name}.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/gdn2/gdn2_h128_L2_N256_cls_s0.json"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,116 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py"
+ ],
+ "fetch": [
+  "results/sweep_smoke/{name}.json"
+ ],
+ "jobs": [
+  {
+   "name": "smoke_k128v128_N64_cls",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N64_V16 --objective cls --head_dim 128 --expand_v 1.0 --epochs 3 --seed 0 --curriculum 0.5 --test_samples 10000 --out results/sweep_smoke/smoke_k128v128_N64_cls.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/sweep_smoke/smoke_k128v128_N64_cls.json"
+   ]
+  },
+  {
+   "name": "smoke_k128v128_N256_cls",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective cls --head_dim 128 --expand_v 1.0 --epochs 3 --seed 0 --curriculum 0.5 --test_samples 10000 --out results/sweep_smoke/smoke_k128v128_N256_cls.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/sweep_smoke/smoke_k128v128_N256_cls.json"
+   ]
+  },
+  {
+   "name": "smoke_k16v4_N256_cls",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 1 --seed 0 --curriculum 0.5 --test_samples 10000 --out results/sweep_smoke/smoke_k16v4_N256_cls.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/sweep_smoke/smoke_k16v4_N256_cls.json"
+   ]
+  },
+  {
+   "name": "smoke_k16v4_N256_lm",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective lm --head_dim 16 --expand_v 0.25 --epochs 1 --seed 0 --test_samples 10000 --out results/sweep_smoke/smoke_k16v4_N256_lm.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/sweep_smoke/smoke_k16v4_N256_lm.json"
+   ]
+  },
+  {
+   "name": "smoke2_k128v128_N128_cls",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --head_dim 128 --expand_v 1.0 --epochs 3 --seed 0 --curriculum 0.5 --test_samples 10000 --out results/sweep_smoke/smoke2_k128v128_N128_cls.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/sweep_smoke/smoke2_k128v128_N128_cls.json"
+   ]
+  },
+  {
+   "name": "smoke2_k128v128_N256_cls",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective cls --head_dim 128 --expand_v 1.0 --epochs 3 --seed 0 --curriculum 0.5 --test_samples 10000 --out results/sweep_smoke/smoke2_k128v128_N256_cls.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/sweep_smoke/smoke2_k128v128_N256_cls.json"
+   ]
+  },
+  {
+   "name": "smoke2_k16v4_N256_cls",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N256_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 3 --seed 0 --curriculum 0.5 --test_samples 10000 --out results/sweep_smoke/smoke2_k16v4_N256_cls.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2",
+    "mbz_nlp3",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/sweep_smoke/smoke2_k16v4_N256_cls.json"
+   ]
+  }
+ ]
+}

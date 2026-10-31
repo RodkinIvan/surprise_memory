@@ -1,0 +1,102 @@
+{
+ "args": {
+  "subset": "N16_V16",
+  "objective": "lm",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": null,
+  "epochs": 0.1,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 100,
+  "eval_samples": 2000,
+  "test_samples": 5000,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/smoke/smoke_N16_lm.json"
+ },
+ "n_params": 729859,
+ "steps": 351,
+ "test": {
+  "recall_token_acc": 0.9796875,
+  "recall_exact": 0.7438,
+  "nll_true": 0.07792731018066407,
+  "recog_acc9": 0.9984,
+  "recog_pairwise": 0.9998
+ },
+ "curve": [
+  {
+   "step": 100,
+   "train_loss": 2.8128673529624937,
+   "train_acc": 0.08427001953125,
+   "grad_norm": 0.27503788471221924,
+   "lr": 0.00016795677798805633,
+   "time": 170.00450921058655,
+   "recall_token_acc": 0.15903125,
+   "recall_exact": 0.0,
+   "nll_true": 2.6422939453125,
+   "recog_acc9": 0.129,
+   "recog_pairwise": 0.7335
+  },
+  {
+   "step": 200,
+   "train_loss": 1.693996410369873,
+   "train_acc": 0.5047802734375,
+   "grad_norm": 0.764524519443512,
+   "lr": 0.00018174850479578438,
+   "time": 171.1382257938385,
+   "recall_token_acc": 0.8711875,
+   "recall_exact": 0.14,
+   "nll_true": 0.48082537841796874,
+   "recog_acc9": 0.987,
+   "recog_pairwise": 0.9983125
+  },
+  {
+   "step": 300,
+   "train_loss": 0.21008283235132694,
+   "train_acc": 0.9458251953125,
+   "grad_norm": 0.44065558910369873,
+   "lr": 8.793644118259116e-05,
+   "time": 172.28892540931702,
+   "recall_token_acc": 0.971375,
+   "recall_exact": 0.662,
+   "nll_true": 0.10818985748291016,
+   "recog_acc9": 0.9965,
+   "recog_pairwise": 0.9995625
+  },
+  {
+   "step": 351,
+   "train_loss": 0.09213165193796158,
+   "train_acc": 0.9761555989583334,
+   "grad_norm": 0.4807683825492859,
+   "lr": 7.04e-05,
+   "time": 172.9296953678131,
+   "recall_token_acc": 0.97809375,
+   "recall_exact": 0.726,
+   "nll_true": 0.08156369781494141,
+   "recog_acc9": 0.998,
+   "recog_pairwise": 0.99975
+  }
+ ],
+ "train_time": 195.0348196029663,
+ "host": "ws006345",
+ "gpu": "NVIDIA RTX 6000 Ada Generation",
+ "code_version": {
+  "commit": null,
+  "dirty": null,
+  "files_sha256": "52e31b59681b6adf81c147655eb6b9154a8d10b9bff70194dfcd3778f96e340b",
+  "paths": [
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-10-30 21:01:53",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

@@ -1,0 +1,244 @@
+{
+ "16x4_N16": {
+  "base": [
+   0.93574,
+   0.99981,
+   0.98773
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x4_N32": {
+  "base": [
+   0.87516,
+   0.99951,
+   0.99874
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x4_N64": {
+  "base": [
+   0.99985,
+   0.99884,
+   0.92316
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x4_N128": {
+  "base": [
+   0.99893,
+   0.99968,
+   0.96241
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x4_N256": {
+  "base": [
+   0.805275,
+   0.97801,
+   0.78312
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x8_N32": {
+  "base": [
+   0.99844,
+   0.99987,
+   0.94249
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x8_N64": {
+  "base": [
+   0.95972,
+   0.99996,
+   0.97873
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x8_N128": {
+  "base": [
+   0.87049,
+   0.99999,
+   0.99744
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x8_N256": {
+  "base": [
+   0.96404,
+   0.99999,
+   0.97577
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x16_N32": {
+  "base": [
+   1.0,
+   1.0,
+   0.94753
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ },
+ "16x16_N64": {
+  "base": [
+   1.0,
+   0.94713,
+   0.810035
+  ],
+  "A": [
+   null,
+   null,
+   null
+  ],
+  "B": [
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null
+  ]
+ }
+}
