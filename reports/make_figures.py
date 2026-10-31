@@ -275,6 +275,33 @@ def fig_seeds():
     save(fig, "fig7_seeds.png")
 
 
+def fig_fix():
+    t = json.loads((ROOT / "results/fix/summary.json").read_text())
+    variants = [("base", "baseline: prefixes from 16, bce", SERIES[3]), ("A", "A: prefixes from 4", SERIES[2]),
+                ("B", "B: A + lr 3e-4", SERIES[1]), ("C", "C: A + ranking loss", SERIES[0])]
+    fig, ax = plt.subplots(figsize=(11, 3.8), layout="constrained")
+    cfgs = list(t)
+    for j, (key, label, col) in enumerate(variants):
+        xs, ys = [], []
+        for i, c in enumerate(cfgs):
+            for a in t[c][key]:
+                if a is not None:
+                    xs.append(i + (j - 1.5) * 0.18)
+                    ys.append(a)
+        ax.scatter(xs, ys, s=30, color=col, edgecolor=SURFACE, linewidth=1.2, label=label, zorder=3)
+    chance(ax)
+    ax.axhline(0.852, color=MUTED, lw=1, zorder=1)
+    ax.annotate("4-bit checksum", (1, 0.852), xycoords=("axes fraction", "data"), xytext=(-4, -12), textcoords="offset points",
+                ha="right", color=MUTED, fontsize=8.5)
+    ax.set_xticks(range(len(cfgs)), [c.replace("_N", "\nN=") for c in cfgs])
+    ax.grid(axis="x", visible=False)
+    ax.set_ylim(-0.04, 1.06)
+    ax.set_ylabel("test acc9, one dot per seed")
+    ax.set_title("Recognition model: training fixes on the configurations where a seed fell short")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=4, fontsize=8.5)
+    save(fig, "fig8_fix.png")
+
+
 if __name__ == "__main__":
     fig_first_grid()
     fig_plateau()
@@ -283,3 +310,4 @@ if __name__ == "__main__":
     fig_sweep()
     fig_bits()
     fig_seeds()
+    fig_fix()
