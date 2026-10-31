@@ -1,4 +1,4 @@
-"""Poster-sized figures for posters/neurips_poster.tex, from results/{gdn2,sweep_smoke}.
+"""Poster-sized figures for posters/neurips_poster.tex, from results/{gdn2,sweep_smoke,sweep,fix}.
 
   conda run -n ai python posters/make_poster_figures.py   ->  posters/figures/*.pdf
 
@@ -73,7 +73,7 @@ def save(fig, name):
 
 def fig_full_state():
     """Result 1: at 128x128 recall is trivial, the plain classifier never leaves ln 2 for N >= 64."""
-    fig, (a, b) = plt.subplots(1, 2, figsize=(W, 5.6), layout="constrained")
+    fig, (a, b) = plt.subplots(1, 2, figsize=(W, 4.9), layout="constrained")
     lm = [grid(n, "lm")["test"] for n in LENGTHS]
     cls = [grid(n, "cls")["test"] for n in LENGTHS]
     a.set_xscale("log", base=2)
@@ -111,7 +111,7 @@ def fig_curriculum():
     }
     style = {"none": (NONE, "no curriculum"), "hard": (RECOG, "easy negatives first"),
              "length": (CURR, "length curriculum (prefixes 16 … N)")}
-    fig, axes = plt.subplots(1, 3, figsize=(W, 5.0), sharey=True, layout="constrained")
+    fig, axes = plt.subplots(1, 3, figsize=(W, 4.4), sharey=True, layout="constrained")
     for ax, (n, rs) in zip(axes, runs.items()):
         for key, r in rs:
             s, y = curve(r, "recog_acc9")
@@ -161,8 +161,8 @@ def fig_small_state_curves():
 STATES = [(16, 4), (16, 8), (16, 16), (32, 32), (64, 64), (128, 128)]
 
 
-def sweep(k, v, n, obj):
-    p = ROOT / f"results/sweep/k{k}v{v}_N{n}_{obj}_s0.json"
+def sweep(k, v, n, obj, seed=0):
+    p = ROOT / f"results/sweep/k{k}v{v}_N{n}_{obj}_s{seed}.json"
     return json.loads(p.read_text()) if p.exists() else None
 
 
@@ -193,8 +193,63 @@ def fig_sweep(lengths=(64, 128, 256)):
     save(fig, "sweep.pdf")
 
 
+def fig_seeds(lengths=(16, 32, 64, 128, 256)):
+    """3 seeds at the three smallest states: mean line, min-max band, one dot per seed."""
+    fig, axes = plt.subplots(1, 3, figsize=(W, 4.7), sharey=True, layout="constrained")
+    x = list(range(len(lengths)))
+    for ax, (k, v) in zip(axes, STATES[:3]):
+        for obj, key, col, ls, label in [("lm", "recall_exact", MUTED, ":", "recall: exact copy"),
+                                         ("lm", "recog_acc9", RECALL, "-", "recognition by surprise"),
+                                         ("cls", "recog_acc9", RECOG, "-", "recognition model")]:
+            ys = [[sweep(k, v, n, obj, s)["test"][key] for s in range(3)] for n in lengths]
+            ax.fill_between(x, [min(y) for y in ys], [max(y) for y in ys], color=col, alpha=0.18, lw=0)
+            ax.plot(x, [sum(y) / 3 for y in ys], ls=ls, color=col, lw=3.5 if ls == "-" else 3, label=label)
+            for xi, y in zip(x, ys):
+                ax.plot([xi] * 3, y, "o", ms=6, color=col, alpha=0.75, zorder=3)
+        hline(ax, 1 / 9, "chance")
+        ax.set_xticks(x, [str(n) for n in lengths])
+        ax.set_xlim(-0.25, len(x) - 0.75)
+        ax.set_xlabel("sequence length N")
+        ax.set_title(f"{k}×{v}")
+    axes[0].set_ylabel("test acc9 / exact copy")
+    axes[0].set_ylim(-0.04, 1.08)
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="outside upper center", ncol=3, columnspacing=1.6)
+    save(fig, "seeds.pdf")
+
+
+FIX_CONFIGS = [(4, 16), (4, 32), (4, 64), (4, 128), (8, 32), (8, 64), (8, 128), (16, 32), (16, 64)]
+
+
+def fig_fix():
+    """Experiment 4, N <= 128: recognition-model acc9 of every config x seed under each training version."""
+    versions = [("baseline (BCE)", None, RECOG_L), ("A  prefixes from 4", "A", MUTED),
+                ("B  A + lr 3e-4", "B", MUTED), ("C  A + ranking loss", "C", RECOG)]
+    fig, ax = plt.subplots(figsize=(W, 3.9), layout="constrained")
+    for row, (label, ver, col) in enumerate(versions):
+        acc = []
+        for i, (v, n) in enumerate(FIX_CONFIGS):
+            for s in range(3):
+                r = sweep(16, v, n, "cls", s) if ver is None else load(f"results/fix/fix{ver}_k16v{v}_N{n}_cls_s{s}.json")
+                acc.append(r["test"]["recog_acc9"])
+        jitter = [((j * 7) % 9 - 4) * 0.045 for j in range(len(acc))]
+        ax.scatter(acc, [row + d for d in jitter], s=110, color=col, alpha=0.8, lw=0, zorder=3)
+        low = sum(a < 0.95 for a in acc)
+        ax.annotate(f"mean {sum(acc) / len(acc):.3f}   ·   {low} below 0.95", (1, row), xycoords=("axes fraction", "data"),
+                    xytext=(14, 0), textcoords="offset points", va="center", color=TEXT2, fontsize=20)
+    ax.axvline(0.852, color=MUTED, lw=2, ls=(0, (4, 3)), zorder=1)
+    ax.annotate("4-bit checksum", (0.852, -0.62), ha="right", va="bottom", color=MUTED, fontsize=18,
+                xytext=(-6, 0), textcoords="offset points")
+    ax.set_yticks(range(len(versions)), [v[0] for v in versions])
+    ax.set_ylim(len(versions) - 0.5, -0.7)
+    ax.set_xlim(0, 1.02)
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("test acc9 of the recognition model (one dot per configuration and seed)")
+    save(fig, "fix.pdf")
+
+
 if __name__ == "__main__":
     fig_full_state()
     fig_curriculum()
     fig_sweep()
-    fig_small_state_curves()
+    fig_seeds()
+    fig_fix()
