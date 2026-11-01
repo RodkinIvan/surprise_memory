@@ -2,6 +2,7 @@
  "project": "surprise_memory",
  "sync": [
   "experiments/train_gdn2.py",
+  "benchmark/generate.py",
   "experiments/probe_ckpt.py",
   "results/diag",
   "ckpt/diag"

@@ -1,0 +1,552 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py",
+  "benchmark/generate.py"
+ ],
+ "fetch": [
+  "results/long/{name}.json"
+ ],
+ "jobs": [
+  {
+   "name": "long_k16v4_N512_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v4_N512_cls_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v4_N512_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v4_N512_cls_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 1 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v4_N512_cls_s1.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v4_N512_cls_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v4_N512_cls_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 2 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v4_N512_cls_s2.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v4_N512_cls_s2.json"
+   ]
+  },
+  {
+   "name": "long_k16v8_N512_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v8_N512_cls_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v8_N512_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v8_N512_cls_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 1 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v8_N512_cls_s1.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v8_N512_cls_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v8_N512_cls_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 2 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v8_N512_cls_s2.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v8_N512_cls_s2.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N512_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v16_N512_cls_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N512_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N512_cls_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 1.0 --epochs 10 --seed 1 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v16_N512_cls_s1.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N512_cls_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N512_cls_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 16 --expand_v 1.0 --epochs 10 --seed 2 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v16_N512_cls_s2.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N512_cls_s2.json"
+   ]
+  },
+  {
+   "name": "long_k32v32_N512_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 32 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k32v32_N512_cls_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k32v32_N512_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k64v64_N512_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 64 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k64v64_N512_cls_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k64v64_N512_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k128v128_N512_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective cls --head_dim 128 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k128v128_N512_cls_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k128v128_N512_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N512_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective lm --head_dim 16 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k16v16_N512_lm_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N512_lm_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N512_lm_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective lm --head_dim 16 --expand_v 1.0 --epochs 10 --seed 1 --train_neg fresh --out results/long/long_k16v16_N512_lm_s1.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N512_lm_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N512_lm_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective lm --head_dim 16 --expand_v 1.0 --epochs 10 --seed 2 --train_neg fresh --out results/long/long_k16v16_N512_lm_s2.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N512_lm_s2.json"
+   ]
+  },
+  {
+   "name": "long_k32v32_N512_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective lm --head_dim 32 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k32v32_N512_lm_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k32v32_N512_lm_s0.json"
+   ]
+  },
+  {
+   "name": "long_k64v64_N512_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective lm --head_dim 64 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k64v64_N512_lm_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k64v64_N512_lm_s0.json"
+   ]
+  },
+  {
+   "name": "long_k128v128_N512_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N512_V16 --objective lm --head_dim 128 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k128v128_N512_lm_s0.json",
+   "gpus": 1,
+   "gb": 14,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k128v128_N512_lm_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v4_N1024_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v4_N1024_cls_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v4_N1024_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v4_N1024_cls_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 1 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v4_N1024_cls_s1.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v4_N1024_cls_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v4_N1024_cls_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 2 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v4_N1024_cls_s2.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v4_N1024_cls_s2.json"
+   ]
+  },
+  {
+   "name": "long_k16v8_N1024_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v8_N1024_cls_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v8_N1024_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v8_N1024_cls_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 1 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v8_N1024_cls_s1.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v8_N1024_cls_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v8_N1024_cls_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 2 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v8_N1024_cls_s2.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v8_N1024_cls_s2.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N1024_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v16_N1024_cls_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N1024_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N1024_cls_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 1.0 --epochs 10 --seed 1 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v16_N1024_cls_s1.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N1024_cls_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N1024_cls_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 16 --expand_v 1.0 --epochs 10 --seed 2 --curriculum 0.5 --train_neg fresh --out results/long/long_k16v16_N1024_cls_s2.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N1024_cls_s2.json"
+   ]
+  },
+  {
+   "name": "long_k32v32_N1024_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 32 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k32v32_N1024_cls_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k32v32_N1024_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k64v64_N1024_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 64 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k64v64_N1024_cls_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k64v64_N1024_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k128v128_N1024_cls_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 128 --expand_v 1.0 --epochs 10 --seed 0 --curriculum 0.5 --train_neg fresh --out results/long/long_k128v128_N1024_cls_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k128v128_N1024_cls_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N1024_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective lm --head_dim 16 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k16v16_N1024_lm_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N1024_lm_s0.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N1024_lm_s1",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective lm --head_dim 16 --expand_v 1.0 --epochs 10 --seed 1 --train_neg fresh --out results/long/long_k16v16_N1024_lm_s1.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N1024_lm_s1.json"
+   ]
+  },
+  {
+   "name": "long_k16v16_N1024_lm_s2",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective lm --head_dim 16 --expand_v 1.0 --epochs 10 --seed 2 --train_neg fresh --out results/long/long_k16v16_N1024_lm_s2.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k16v16_N1024_lm_s2.json"
+   ]
+  },
+  {
+   "name": "long_k32v32_N1024_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective lm --head_dim 32 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k32v32_N1024_lm_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k32v32_N1024_lm_s0.json"
+   ]
+  },
+  {
+   "name": "long_k64v64_N1024_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective lm --head_dim 64 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k64v64_N1024_lm_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k64v64_N1024_lm_s0.json"
+   ]
+  },
+  {
+   "name": "long_k128v128_N1024_lm_s0",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective lm --head_dim 128 --expand_v 1.0 --epochs 10 --seed 0 --train_neg fresh --out results/long/long_k128v128_N1024_lm_s0.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long/long_k128v128_N1024_lm_s0.json"
+   ]
+  }
+ ]
+}

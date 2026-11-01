@@ -1,0 +1,38 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py",
+  "benchmark/generate.py"
+ ],
+ "fetch": [
+  "results/long_smoke/{name}.json"
+ ],
+ "jobs": [
+  {
+   "name": "long_smoke_k128v128_N1024_lm",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective lm --head_dim 128 --expand_v 1.0 --epochs 0.05 --seed 0 --train_neg fresh --test_samples 2000 --eval_every 100 --out results/long_smoke/long_smoke_k128v128_N1024_lm.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long_smoke/long_smoke_k128v128_N1024_lm.json"
+   ]
+  },
+  {
+   "name": "long_smoke_k128v128_N1024_cls",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N1024_V16 --objective cls --head_dim 128 --expand_v 1.0 --epochs 0.05 --seed 0 --curriculum 0.5 --train_neg fresh --test_samples 2000 --eval_every 100 --out results/long_smoke/long_smoke_k128v128_N1024_cls.json",
+   "gpus": 1,
+   "gb": 24,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/long_smoke/long_smoke_k128v128_N1024_cls.json"
+   ]
+  }
+ ]
+}

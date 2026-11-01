@@ -1,7 +1,8 @@
 {
  "project": "surprise_memory",
  "sync": [
-  "experiments/train_gdn2.py"
+  "experiments/train_gdn2.py",
+  "benchmark/generate.py"
  ],
  "fetch": [
   "results/exp5/{name}.json"

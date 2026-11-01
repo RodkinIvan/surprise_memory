@@ -1,6 +1,6 @@
 """Write the jobs files of the state-size sweep: recall (lm) vs recognition (cls) memory.
 
-  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke,probe,hard}.json
+  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke,probe,hard,long,long_smoke}.json
 Submit with:  python3 tools/hostq.py submit experiments/jobs_sweep.json
 """
 
@@ -34,7 +34,7 @@ def jobs_file(out_dir, jobs):
     for j in jobs:
         j["cmd"] = j["cmd"].replace("{project_dir_rel}", out_dir)
         j["expect"] = [f"results/{out_dir}/{j['name']}.json"]
-    return {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py"],
+    return {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py", "benchmark/generate.py"],
             "fetch": [f"results/{out_dir}/{{name}}.json"], "jobs": jobs}
 
 
@@ -83,14 +83,27 @@ def main():
     spec = jobs_file("hard", hard)
     spec["fetch"].append("ckpt/hard/{name}.pt")
     (here / "jobs_hard.json").write_text(json.dumps(spec, indent=1))
+    # longer sequences than the Hub has (generated on each host, same generator and seeds) where states still recall or
+    # recognise at N=256; fresh negatives after the curriculum, since the stored train copies would take 3.7-7.4 GB per job
+    long = [job(f"long_k{k}v{v}_N{n}_{obj}_s{seed}", n, k, v, obj, 10, " --train_neg fresh", seed=seed, hosts=SEED_HOSTS)
+            for n in (512, 1024) for obj, states in (("cls", STATES), ("lm", STATES[2:])) for k, v in states
+            for seed in ((0, 1, 2) if k * v <= 256 else (0,))]
+    for j in long:
+        j["gb"] = 24 if "_N1024_" in j["name"] else 14
+    (here / "jobs_long.json").write_text(json.dumps(jobs_file("long", long), indent=1))
+    long_smoke = [job(f"long_smoke_k128v128_N1024_{obj}", 1024, 128, 128, obj, 0.05, " --train_neg fresh --test_samples 2000 --eval_every 100",
+                      hosts=["mbz_nlp2.07"]) for obj in OBJECTIVES]
+    for j in long_smoke:
+        j["gb"] = 24
+    (here / "jobs_long_smoke.json").write_text(json.dumps(jobs_file("long_smoke", long_smoke), indent=1))
     # probe the saved models with swap / shuffle / sum-preserving negatives, on one host that gets all of them
-    probe = {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py", "experiments/probe_ckpt.py", "results/diag", "ckpt/diag"],
+    probe = {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py", "benchmark/generate.py", "experiments/probe_ckpt.py", "results/diag", "ckpt/diag"],
              "fetch": ["results/diag/probe.json"],
              "jobs": [{"name": "probe_diag", "cmd": f"{PY} experiments/probe_ckpt.py --results results/diag --ckpts ckpt/diag --out results/diag/probe.json",
                        "gpus": 1, "gb": 8, "retries": 1, "hosts": ["mbz_nlp2"], "expect": ["results/diag/probe.json"]}]}
     (here / "jobs_probe.json").write_text(json.dumps(probe, indent=1))
     (here / "jobs_sweep_smoke.json").write_text(json.dumps(jobs_file("sweep_smoke", smoke), indent=1))
-    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs, {len(hard)} hard jobs")
+    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs, {len(hard)} hard jobs, {len(long)} long jobs")
 
 
 if __name__ == "__main__":

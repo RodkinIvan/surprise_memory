@@ -9,10 +9,12 @@ Both are evaluated on choosing the true sequence among it and its 8 corrupted co
 """
 
 import argparse
+import fcntl
 import json
 import math
 import os
 import socket
+import sys
 import time
 from pathlib import Path
 
@@ -28,6 +30,8 @@ from huggingface_hub import snapshot_download
 VOCAB = 16
 SEP, BOS = VOCAB, VOCAB + 1
 REPO = "irodkin/recognition-memory"
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "benchmark"))
+import generate as bench  # noqa: E402  (the benchmark generator: lengths on the Hub, and the subsets it lacks)
 
 
 class Block(nn.Module):
@@ -62,14 +66,31 @@ class Model(nn.Module):
 
 # ---------------------------------------------------------------- data
 
-def load_split(root, subset, split):
+def fetch_subset(data, subset):
+    """Download a subset from the Hub; a length the Hub lacks is generated here, with the benchmark's generator and seeds."""
+    n = int(subset.split("_")[0][1:])
+    if n in bench.LENGTHS:
+        return Path(snapshot_download(REPO, repo_type="dataset", local_dir=data, allow_patterns=[f"{subset}/*"]))
+    root = Path(data)
+    root.mkdir(parents=True, exist_ok=True)
+    with open(root / f".{subset}.lock", "w") as lock:  # jobs on one host generate it once
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if not (root / subset / ".complete").exists():
+            for split in bench.SPLITS:
+                bench.write_split(root, n, split)
+            (root / subset / ".complete").touch()
+    return root
+
+
+def load_split(root, subset, split, corrupted=True):
     seqs, cors = [], []
     for f in sorted((root / subset).glob(f"{split}-*.parquet")):
-        t = pq.read_table(f, columns=["sequence", "corrupted"])
+        t = pq.read_table(f, columns=["sequence", "corrupted"] if corrupted else ["sequence"])
         n = t.num_rows
         seqs.append(t["sequence"].combine_chunks().flatten().to_numpy().reshape(n, -1))
-        cors.append(t["corrupted"].combine_chunks().flatten().flatten().to_numpy().reshape(n, 8, -1))
-    return torch.from_numpy(np.concatenate(seqs)), torch.from_numpy(np.concatenate(cors))
+        if corrupted:
+            cors.append(t["corrupted"].combine_chunks().flatten().flatten().to_numpy().reshape(n, 8, -1))
+    return torch.from_numpy(np.concatenate(seqs)), torch.from_numpy(np.concatenate(cors)) if corrupted else None
 
 
 def make_input(seq, cand):
@@ -110,11 +131,13 @@ def loss_fn(model, objective, seq, cor, gen, p_dense=0.0, crop=None, cls_loss="b
         nll, logits = candidate_nll(model, seq, seq)
         return nll.mean(), (logits.argmax(-1) == seq.long()).float().mean()
     if cls_loss == "pair":  # half the batch as (true, negative) pairs: as many sequences per step as bce
-        seq, cor = seq[:seq.shape[0] // 2], cor[:cor.shape[0] // 2]
+        seq, cor = seq[:seq.shape[0] // 2], None if cor is None else cor[:cor.shape[0] // 2]
     b = seq.shape[0]
     label = torch.rand(b, device=seq.device, generator=gen) < 0.5
     pick = torch.randint(0, 8, (b,), device=seq.device, generator=gen)
-    if crop is None:
+    if crop is None and cor is None:  # --train_neg fresh: a new corruption by the benchmark's process
+        neg = corrupt(seq, torch.full((b,), 1 / (seq.shape[1] - 1), device=seq.device), gen)
+    elif crop is None:
         neg = cor[torch.arange(b, device=seq.device), pick].long()
     else:  # curriculum: a prefix of the sequence; easy-negative warm-up: a share p_dense of the negatives is heavily corrupted
         seq = seq[:, :crop]
@@ -285,6 +308,9 @@ def main():
     p.add_argument("--hard_min", type=float, default=0.0,
                    help="cls: share of the curriculum's negatives that are benchmark-like (1-2 changed tokens) from the first step;"
                         " the heavily corrupted share decays 1 - hard_min -> 0")
+    p.add_argument("--train_neg", choices=["stored", "fresh"], default="stored",
+                   help="cls after the curriculum: one of the train split's 8 stored corrupted copies, or a fresh corruption by the"
+                        " benchmark's process; fresh doesn't load the stored copies (7.4 GB at N=1024)")
     p.add_argument("--diag_every", type=int, default=0, help="log gradient, gate and logit statistics every this many steps")
     p.add_argument("--save", default=None, help="save the final weights here")
     p.add_argument("--seed", type=int, default=0)
@@ -298,8 +324,9 @@ def main():
 
     torch.manual_seed(a.seed)
     dev = torch.device("cuda")
-    root = Path(snapshot_download(REPO, repo_type="dataset", local_dir=a.data, allow_patterns=[f"{a.subset}/*"]))
-    tr_seq, tr_cor = (x.to(dev) for x in load_split(root, a.subset, "train"))
+    root = fetch_subset(a.data, a.subset)
+    tr_seq, tr_cor = load_split(root, a.subset, "train", corrupted=a.train_neg == "stored")
+    tr_seq, tr_cor = tr_seq.to(dev), None if tr_cor is None else tr_cor.to(dev)
     va_seq, va_cor = load_split(root, a.subset, "validation")
     te_seq, te_cor = load_split(root, a.subset, "test")
     va_seq, va_cor = va_seq[:a.eval_samples], va_cor[:a.eval_samples]
@@ -339,7 +366,7 @@ def main():
             is_diag = bool(a.diag_every) and (step % a.diag_every == 0 or step == 1)
             if probe:
                 probe.on = is_diag
-            loss, acc = loss_fn(model, a.objective, tr_seq[idx], tr_cor[idx], gen, p_dense, crop, a.cls_loss)
+            loss, acc = loss_fn(model, a.objective, tr_seq[idx], None if tr_cor is None else tr_cor[idx], gen, p_dense, crop, a.cls_loss)
             if probe:
                 probe.on = False
         opt.zero_grad(set_to_none=True)
@@ -373,7 +400,7 @@ def main():
     version = json.loads(Path("CODE_VERSION.json").read_text()) if Path("CODE_VERSION.json").exists() else None
     out = {"args": vars(a), "n_params": n_params, "steps": steps, "test": test, "curve": curve,
            "train_time": time.time() - t0, "host": socket.gethostname(),
-           "gpu": torch.cuda.get_device_name(), "code_version": version}
+           "gpu": torch.cuda.get_device_name(), "peak_gb": torch.cuda.max_memory_allocated() / 2**30, "code_version": version}
     if a.diag_every:
         out.update(diag=diag, profiles=profiles)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
