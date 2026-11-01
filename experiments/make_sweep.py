@@ -1,6 +1,6 @@
 """Write the jobs files of the state-size sweep: recall (lm) vs recognition (cls) memory.
 
-  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke}.json
+  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke,probe,hard}.json
 Submit with:  python3 tools/hostq.py submit experiments/jobs_sweep.json
 """
 
@@ -75,6 +75,14 @@ def main():
         spec = jobs_file(name, js)
         spec["fetch"].append("ckpt/diag/{name}.pt")
         (here / f"jobs_{name}.json").write_text(json.dumps(spec, indent=1))
+    # experiment 7: keep a share of benchmark-like (1-2 token) negatives from the first step of the easy-negative warm-up;
+    # fresh seeds for every variant, the baseline (hard_min 0) included, on the two configs that failed most in experiment 6
+    hard = [job(f"hard{h}_k{k}v{v}_N{n}_cls_s{seed}", n, k, v, "cls", 10,
+                f" --hard_min {h / 100} --diag_every 100 --save ckpt/hard/{{name}}.pt", seed=seed, hosts=SEED_HOSTS)
+            for h in (0, 25, 50) for k, v, n in [(16, 4, 16), (16, 4, 32)] for seed in range(200, 212)]
+    spec = jobs_file("hard", hard)
+    spec["fetch"].append("ckpt/hard/{name}.pt")
+    (here / "jobs_hard.json").write_text(json.dumps(spec, indent=1))
     # probe the saved models with swap / shuffle / sum-preserving negatives, on one host that gets all of them
     probe = {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py", "experiments/probe_ckpt.py", "results/diag", "ckpt/diag"],
              "fetch": ["results/diag/probe.json"],
@@ -82,7 +90,7 @@ def main():
                        "gpus": 1, "gb": 8, "retries": 1, "hosts": ["mbz_nlp2"], "expect": ["results/diag/probe.json"]}]}
     (here / "jobs_probe.json").write_text(json.dumps(probe, indent=1))
     (here / "jobs_sweep_smoke.json").write_text(json.dumps(jobs_file("sweep_smoke", smoke), indent=1))
-    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs")
+    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs, {len(hard)} hard jobs")
 
 
 if __name__ == "__main__":

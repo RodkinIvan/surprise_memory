@@ -282,6 +282,9 @@ def main():
     p.add_argument("--curriculum", type=float, default=0.0,
                    help="cls: fraction of training spent on a curriculum: prefixes of length cur_min, 2*cur_min, ... N (equal time each)"
                         " with negatives corrupted on the fly, the heavily corrupted share decaying 1 -> 0")
+    p.add_argument("--hard_min", type=float, default=0.0,
+                   help="cls: share of the curriculum's negatives that are benchmark-like (1-2 changed tokens) from the first step;"
+                        " the heavily corrupted share decays 1 - hard_min -> 0")
     p.add_argument("--diag_every", type=int, default=0, help="log gradient, gate and logit statistics every this many steps")
     p.add_argument("--save", default=None, help="save the final weights here")
     p.add_argument("--seed", type=int, default=0)
@@ -290,6 +293,8 @@ def main():
     a = p.parse_args()
     if a.cur_min < 1 or a.cur_min & (a.cur_min - 1):
         p.error(f"--cur_min must be a power of 2, got {a.cur_min}")
+    if not 0 <= a.hard_min <= 1:
+        p.error(f"--hard_min must be in [0, 1], got {a.hard_min}")
 
     torch.manual_seed(a.seed)
     dev = torch.device("cuda")
@@ -330,7 +335,7 @@ def main():
                 t = step / (a.curriculum * steps)
                 stage = (min(int(t * len(lens)), len(lens) - 1) if a.cur_weight == "equal"
                          else next(i for i, e in enumerate(ends) if t < e or i == len(ends) - 1))
-                p_dense, crop = 1 - t, lens[stage]
+                p_dense, crop = (1 - a.hard_min) * (1 - t), lens[stage]
             is_diag = bool(a.diag_every) and (step % a.diag_every == 0 or step == 1)
             if probe:
                 probe.on = is_diag

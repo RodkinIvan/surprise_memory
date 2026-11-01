@@ -1,0 +1,1092 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py"
+ ],
+ "fetch": [
+  "results/hard/{name}.json",
+  "ckpt/hard/{name}.pt"
+ ],
+ "jobs": [
+  {
+   "name": "hard0_k16v4_N16_cls_s200",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 200 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s200.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s200.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s201",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 201 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s201.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s201.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s202",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 202 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s202.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s202.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s203",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 203 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s203.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s203.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s204",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 204 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s204.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s204.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s205",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 205 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s205.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s205.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s206",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 206 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s206.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s206.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s207",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 207 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s207.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s207.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s208",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 208 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s208.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s208.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s209",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 209 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s209.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s209.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s210",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 210 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s210.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s210.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N16_cls_s211",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 211 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N16_cls_s211.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N16_cls_s211.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s200",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 200 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s200.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s200.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s201",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 201 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s201.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s201.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s202",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 202 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s202.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s202.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s203",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 203 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s203.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s203.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s204",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 204 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s204.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s204.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s205",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 205 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s205.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s205.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s206",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 206 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s206.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s206.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s207",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 207 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s207.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s207.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s208",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 208 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s208.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s208.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s209",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 209 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s209.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s209.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s210",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 210 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s210.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s210.json"
+   ]
+  },
+  {
+   "name": "hard0_k16v4_N32_cls_s211",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 211 --curriculum 0.5 --hard_min 0.0 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard0_k16v4_N32_cls_s211.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard0_k16v4_N32_cls_s211.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s200",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 200 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s200.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s200.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s201",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 201 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s201.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s201.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s202",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 202 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s202.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s202.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s203",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 203 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s203.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s203.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s204",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 204 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s204.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s204.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s205",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 205 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s205.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s205.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s206",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 206 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s206.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s206.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s207",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 207 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s207.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s207.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s208",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 208 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s208.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s208.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s209",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 209 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s209.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s209.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s210",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 210 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s210.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s210.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N16_cls_s211",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 211 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N16_cls_s211.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N16_cls_s211.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s200",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 200 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s200.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s200.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s201",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 201 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s201.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s201.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s202",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 202 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s202.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s202.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s203",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 203 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s203.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s203.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s204",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 204 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s204.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s204.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s205",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 205 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s205.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s205.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s206",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 206 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s206.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s206.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s207",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 207 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s207.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s207.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s208",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 208 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s208.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s208.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s209",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 209 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s209.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s209.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s210",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 210 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s210.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s210.json"
+   ]
+  },
+  {
+   "name": "hard25_k16v4_N32_cls_s211",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 211 --curriculum 0.5 --hard_min 0.25 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard25_k16v4_N32_cls_s211.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard25_k16v4_N32_cls_s211.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s200",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 200 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s200.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s200.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s201",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 201 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s201.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s201.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s202",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 202 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s202.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s202.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s203",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 203 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s203.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s203.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s204",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 204 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s204.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s204.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s205",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 205 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s205.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s205.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s206",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 206 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s206.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s206.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s207",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 207 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s207.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s207.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s208",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 208 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s208.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s208.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s209",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 209 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s209.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s209.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s210",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 210 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s210.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s210.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N16_cls_s211",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 211 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N16_cls_s211.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N16_cls_s211.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s200",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 200 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s200.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s200.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s201",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 201 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s201.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s201.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s202",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 202 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s202.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s202.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s203",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 203 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s203.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s203.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s204",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 204 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s204.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s204.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s205",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 205 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s205.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s205.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s206",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 206 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s206.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s206.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s207",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 207 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s207.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s207.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s208",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 208 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s208.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s208.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s209",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 209 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s209.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s209.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s210",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 210 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s210.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s210.json"
+   ]
+  },
+  {
+   "name": "hard50_k16v4_N32_cls_s211",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N32_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 10 --seed 211 --curriculum 0.5 --hard_min 0.5 --diag_every 100 --save ckpt/hard/{name}.pt --out results/hard/hard50_k16v4_N32_cls_s211.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/hard/hard50_k16v4_N32_cls_s211.json"
+   ]
+  }
+ ]
+}
