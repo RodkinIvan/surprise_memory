@@ -1,0 +1,27 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py",
+  "experiments/probe_ckpt.py",
+  "results/diag",
+  "ckpt/diag"
+ ],
+ "fetch": [
+  "results/diag/probe.json"
+ ],
+ "jobs": [
+  {
+   "name": "probe_diag",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/probe_ckpt.py --results results/diag --ckpts ckpt/diag --out results/diag/probe.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2"
+   ],
+   "expect": [
+    "results/diag/probe.json"
+   ]
+  }
+ ]
+}

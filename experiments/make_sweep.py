@@ -75,6 +75,12 @@ def main():
         spec = jobs_file(name, js)
         spec["fetch"].append("ckpt/diag/{name}.pt")
         (here / f"jobs_{name}.json").write_text(json.dumps(spec, indent=1))
+    # probe the saved models with swap / shuffle / sum-preserving negatives, on one host that gets all of them
+    probe = {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py", "experiments/probe_ckpt.py", "results/diag", "ckpt/diag"],
+             "fetch": ["results/diag/probe.json"],
+             "jobs": [{"name": "probe_diag", "cmd": f"{PY} experiments/probe_ckpt.py --results results/diag --ckpts ckpt/diag --out results/diag/probe.json",
+                       "gpus": 1, "gb": 8, "retries": 1, "hosts": ["mbz_nlp2"], "expect": ["results/diag/probe.json"]}]}
+    (here / "jobs_probe.json").write_text(json.dumps(probe, indent=1))
     (here / "jobs_sweep_smoke.json").write_text(json.dumps(jobs_file("sweep_smoke", smoke), indent=1))
     print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs")
 
