@@ -172,14 +172,15 @@
   \figcap{Recognition model, \textcolor{recog!45}{\textbf{baseline}} and \RG{ranking loss}, 3 runs per configuration ($16{\times}4$--$16{\times}16$).
   (a) hollow: $N{=}256$. (b) filled: 10 epochs; hollow: 20, more curriculum time on long prefixes.}
   \begin{itemize}
-    \item Up to $N{=}128$ the \RG{ranking loss} fails less (2 vs.\ 7 of 33 below 0.95; $p{=}0.07$): suggestive, not significant. It also collapses (0.06).
-    \item At $N{=}256$ it is worse (0.92 vs.\ 0.96), and 20 epochs hurt both (b).
+    \item Up to $N{=}128$ the \RG{ranking loss} fails less (2 vs.\ 7 of 33 below 0.95; $p{=}0.07$, not significant) but also collapses (0.06);
+          at $N{=}256$ it is worse (0.92 vs.\ 0.96). 20 epochs hurt both (b).
   \end{itemize}
   \textbf{What a failed run is} (28 instrumented reruns):
   \begin{itemize}
     \item \textbf{The right comparison, less precise.} It uses order (shuffles caught 0.995) and is no sum checksum
           (sum-kept edits 0.936 = random 0.937), but catches a single change 0.89 vs.\ 0.997.
     \item \textbf{Decided during the curriculum:} 78--81\% vs.\ 98--99\% single-change detection at its end; only 86--90\% after.
+    \item \textbf{Small-edit negatives from step 1 don't help} ($16{\times}4$, $N{=}16, 32$): 7 of 24 runs fail with a 25\% share, as without; 11 of 24 with 50\%.
   \end{itemize}
 \end{block}\vspace{-0.55in}
 \end{minipage}\hfill
@@ -219,7 +220,7 @@
 \begin{block}{Next}
   \begin{itemize}
     \item \textbf{More runs per cell} (6--10, both readouts) to measure failure rates.
-    \item \textbf{Train precision early}: keep 1--2-token negatives from the start, or restart weak runs.
+    \item \textbf{Restarts}: train several starts for ${\sim}$5k steps, continue the lowest-loss one. Training changes so far (fixes, ranking loss, early small-edit negatives) don't remove the failures.
     \item \textbf{Harder benchmarks} where checksums fail; $K$ stored sequences per context.
   \end{itemize}
   \vspace{0.1in}
