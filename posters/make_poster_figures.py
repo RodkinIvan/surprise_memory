@@ -111,7 +111,7 @@ def fig_curriculum():
     }
     style = {"none": (NONE, "no curriculum"), "hard": (RECOG, "easy negatives first"),
              "length": (CURR, "length curriculum (prefixes 16 … N)")}
-    fig, axes = plt.subplots(1, 3, figsize=(W, 4.4), sharey=True, layout="constrained")
+    fig, axes = plt.subplots(1, 3, figsize=(W, 5.0), sharey=True, layout="constrained")
     for ax, (n, rs) in zip(axes, runs.items()):
         for key, r in rs:
             s, y = curve(r, "recog_acc9")
@@ -180,7 +180,7 @@ def fig_sweep(lengths=(64, 128, 256)):
         ax.plot(*pts(lm, "recall_token_acc"), "s:", color=RECALL_L, lw=3, ms=9, label="recall: tokens copied")
         ax.plot(*pts(lm, "recall_exact"), "^:", color=MUTED, lw=3, ms=9, label="recall: exact copy")
         ax.plot(*pts(lm, "recog_acc9"), "o-", color=RECALL, label="recognition by surprise")
-        ax.plot(*pts(cls, "recog_acc9"), "o-", color=RECOG, label="recognition classifier")
+        ax.plot(*pts(cls, "recog_acc9"), "o-", color=RECOG, label="recognition model")
         hline(ax, 1 / 9, "chance")
         ax.set_xticks(x, [f"{k}×{v}" for k, v in STATES], rotation=45, ha="right", rotation_mode="anchor",
                       fontsize=18)
@@ -224,7 +224,7 @@ def fig_fix():
     """Experiment 4, N <= 128: recognition-model acc9 of every config x seed under each training version."""
     versions = [("baseline (BCE)", None, RECOG_L), ("A  prefixes from 4", "A", MUTED),
                 ("B  A + lr 3e-4", "B", MUTED), ("C  A + ranking loss", "C", RECOG)]
-    fig, ax = plt.subplots(figsize=(W, 3.9), layout="constrained")
+    fig, ax = plt.subplots(figsize=(W, 4.4), layout="constrained")
     for row, (label, ver, col) in enumerate(versions):
         acc = []
         for i, (v, n) in enumerate(FIX_CONFIGS):
@@ -248,7 +248,6 @@ def fig_fix():
 
 
 if __name__ == "__main__":
-    fig_full_state()
     fig_curriculum()
     fig_sweep()
     fig_seeds()

@@ -116,7 +116,7 @@ def loss_fn(model, objective, seq, cor, gen, p_dense=0.0, crop=None, cls_loss="b
     pick = torch.randint(0, 8, (b,), device=seq.device, generator=gen)
     if crop is None:
         neg = cor[torch.arange(b, device=seq.device), pick].long()
-    else:  # curriculum: a prefix of the sequence; a share p_dense of the negatives is heavily corrupted (easy)
+    else:  # curriculum: a prefix of the sequence; easy-negative warm-up: a share p_dense of the negatives is heavily corrupted
         seq = seq[:, :crop]
         dense = torch.rand(b, device=seq.device, generator=gen) < p_dense
         rate = torch.where(dense, 0.5 * torch.rand(b, device=seq.device, generator=gen), 1 / max(crop - 1, 1))
@@ -198,6 +198,8 @@ def main():
     p.add_argument("--cls_loss", choices=["bce", "pair"], default="bce",
                    help="cls: bce on one candidate (50%% true) or pairwise ranking of the true sequence above a negative")
     p.add_argument("--cur_min", type=int, default=16, help="cls: shortest prefix of the length curriculum (a power of 2)")
+    p.add_argument("--cur_weight", choices=["equal", "length"], default="equal",
+                   help="cls: time per curriculum stage: equal, or proportional to the prefix length")
     p.add_argument("--curriculum", type=float, default=0.0,
                    help="cls: fraction of training spent on a curriculum: prefixes of length cur_min, 2*cur_min, ... N (equal time each)"
                         " with negatives corrupted on the fly, the heavily corrupted share decaying 1 -> 0")
@@ -205,6 +207,8 @@ def main():
     p.add_argument("--data", default="hf_data")
     p.add_argument("--out", required=True)
     a = p.parse_args()
+    if a.cur_min < 1 or a.cur_min & (a.cur_min - 1):
+        p.error(f"--cur_min must be a power of 2, got {a.cur_min}")
 
     torch.manual_seed(a.seed)
     dev = torch.device("cuda")
@@ -227,6 +231,7 @@ def main():
     eval_bs = min(4096, max(16, 2**20 // (9 * (2 * tr_seq.shape[1] + 2))))
     n = tr_seq.shape[1]
     lens = [m for m in (2 ** i for i in range(16)) if a.cur_min <= m < n] + [n]  # curriculum lengths cur_min, ..., N
+    ends = [sum(lens[:i + 1]) / sum(lens) for i in range(len(lens))]  # --cur_weight length: where each stage ends
     print(f"{a.subset} {a.objective}: {n_params:,} params, {steps} steps", flush=True)
 
     curve, t0, run_loss, run_acc, k = [], time.time(), 0.0, 0.0, 0
@@ -240,7 +245,9 @@ def main():
             p_dense, crop = 0.0, None
             if a.objective == "cls" and step <= a.curriculum * steps:
                 t = step / (a.curriculum * steps)
-                p_dense, crop = 1 - t, lens[min(int(t * len(lens)), len(lens) - 1)]
+                stage = (min(int(t * len(lens)), len(lens) - 1) if a.cur_weight == "equal"
+                         else next(i for i, e in enumerate(ends) if t < e or i == len(ends) - 1))
+                p_dense, crop = 1 - t, lens[stage]
             loss, acc = loss_fn(model, a.objective, tr_seq[idx], tr_cor[idx], gen, p_dense, crop, a.cls_loss)
         opt.zero_grad(set_to_none=True)
         loss.backward()

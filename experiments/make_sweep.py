@@ -1,6 +1,6 @@
 """Write the jobs files of the state-size sweep: recall (lm) vs recognition (cls) memory.
 
-  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix}.json
+  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5}.json
 Submit with:  python3 tools/hostq.py submit experiments/jobs_sweep.json
 """
 
@@ -18,6 +18,10 @@ OBJECTIVES = {"lm": "", "cls": " --curriculum 0.5"}
 # fixes for the recognition objective, tested where some seed of the sweep fell short
 FIXES = {"A": " --cur_min 4", "B": " --cur_min 4 --lr 3e-4", "C": " --cur_min 4 --cls_loss pair"}
 FIX_CONFIGS = [(16, 4, n) for n in (16, 32, 64, 128, 256)] + [(16, 8, n) for n in (32, 64, 128, 256)] + [(16, 16, n) for n in (32, 64)]
+# experiment 5: fresh seeds for baseline and C, on FIX_CONFIGS and on configs where no baseline seed fell short
+UNSELECTED = [(16, 8, 16), (16, 16, 128), (16, 16, 256)]
+FRESH_SEEDS = (3, 4, 5)
+LONG = " --cur_weight length"   # with 20 epochs: longer training, curriculum time proportional to prefix length
 
 
 def job(name, n, k, v, obj, epochs, extra="", seed=0, hosts=HOSTS):
@@ -54,8 +58,16 @@ def main():
     fix = [job(f"fix{f}_k{k}v{v}_N{n}_cls_s{seed}", n, k, v, "cls", 10, flags, seed=seed, hosts=SEED_HOSTS)
            for f, flags in FIXES.items() for seed in (0, 1, 2) for k, v, n in FIX_CONFIGS]
     (here / "jobs_fix.json").write_text(json.dumps(jobs_file("fix", fix), indent=1))
+    variants = {"base": "", "C": FIXES["C"]}
+    exp5 = [job(f"e5_{name}_k{k}v{v}_N{n}_cls_s{seed}", n, k, v, "cls", 10, flags, seed=seed, hosts=SEED_HOSTS)
+            for name, flags in variants.items() for seed in FRESH_SEEDS for k, v, n in FIX_CONFIGS + UNSELECTED]
+    exp5 += [job(f"e5_{name}L_k{k}v{v}_N256_cls_s{seed}", 256, k, v, "cls", 20, flags + LONG, seed=seed, hosts=SEED_HOSTS)
+             for name, flags in variants.items() for seed in FRESH_SEEDS for k, v in [(16, 4), (16, 8)]]
+    # the current code at default flags must reproduce the sweep (whose code is experiments/archive/train_gdn2_56a994.py)
+    exp5 += [job(f"repro_k{k}v{v}_N{n}_cls_s0", n, k, v, "cls", 10, hosts=SEED_HOSTS) for k, v, n in [(16, 4, 32), (16, 8, 128)]]
+    (here / "jobs_exp5.json").write_text(json.dumps(jobs_file("exp5", exp5), indent=1))
     (here / "jobs_sweep_smoke.json").write_text(json.dumps(jobs_file("sweep_smoke", smoke), indent=1))
-    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs")
+    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs")
 
 
 if __name__ == "__main__":

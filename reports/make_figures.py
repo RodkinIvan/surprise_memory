@@ -107,14 +107,14 @@ def fig_plateau():
 def fig_curriculum():
     runs = {
         64: [("none (first grid, 10 epochs)", grid(64, "cls")),
-             ("hard-negative curriculum (3 epochs)", load("results/sweep_smoke/smoke_k128v128_N64_cls.json"))],
+             ("easy-negative warm-up (3 epochs)", load("results/sweep_smoke/smoke_k128v128_N64_cls.json"))],
         128: [("none (first grid, 10 epochs)", grid(128, "cls")),
               ("length curriculum (3 epochs)", load("results/sweep_smoke/smoke2_k128v128_N128_cls.json"))],
         256: [("none (first grid, 10 epochs)", grid(256, "cls")),
-              ("hard-negative curriculum (3 epochs)", load("results/sweep_smoke/smoke_k128v128_N256_cls.json")),
+              ("easy-negative warm-up (3 epochs)", load("results/sweep_smoke/smoke_k128v128_N256_cls.json")),
               ("length curriculum (3 epochs)", load("results/sweep_smoke/smoke2_k128v128_N256_cls.json"))],
     }
-    color = {"none": SERIES[3], "hard": SERIES[1], "length": SERIES[2]}
+    color = {"none": SERIES[3], "easy": SERIES[1], "length": SERIES[2]}
     fig, axes = plt.subplots(1, 3, figsize=(11, 3.4), sharey=True, layout="constrained")
     for ax, (n, rs) in zip(axes, runs.items()):
         for label, r in rs:

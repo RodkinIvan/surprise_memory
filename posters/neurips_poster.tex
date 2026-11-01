@@ -1,5 +1,5 @@
 % NeurIPS poster: recall vs recognition memory in a small Gated DeltaNet-2.
-% Numbers: reports/recall_vs_recognition.md (experiments 1-2) and results/sweep/summary.json (experiment 3, 84 runs).
+% Numbers: reports/recall_vs_recognition.md (experiments 1-4; results/{gdn2,sweep_smoke,sweep,fix}).
 % Build:  conda run -n ai python posters/make_poster_figures.py
 %         cd posters && latexmk -pdf neurips_poster.tex   (or pdflatex twice)
 \documentclass{article}
@@ -78,10 +78,11 @@
   {\fontsize{44}{52}\selectfont\bfseries Takeaway\par}\vspace{0.2in}
   A memory can tell whether an input is familiar long after it can no longer reproduce it.
   \begin{itemize}[label=\textcolor{white}{\textbullet}]
-    \item Shrinking a GDN-2 state, \textbf{exact recall fails first}: at $16{\times}8$, $N{\ge}128$ no sequence is copied exactly, yet surprise still scores acc9 ${\ge}0.98$.
-    \item At the smallest state ($16{\times}4$, $N{=}256$) the memory \textbf{trained for recognition} wins:
-          acc9 \textbf{0.81} vs.\ \textbf{0.43} for surprise (chance 0.11), with 18\% of tokens recalled.
-    \item Training that classifier at long $N$ needs a \textbf{length curriculum}.
+    \item Shrinking a GDN-2 state, \textbf{exact recall fails first}: at $16{\times}16$, $N{=}256$ nothing is copied exactly,
+          yet both readouts score acc9 ${\ge}0.996$.
+    \item At the smallest state ($16{\times}4$) the memory \textbf{trained for recognition} wins in \textbf{every seed}:
+          acc9 \textbf{0.86} vs.\ \textbf{0.45} for surprise at $N{=}256$ (chance 0.11).
+    \item Its training needs a \textbf{curriculum} and a \textbf{ranking loss}.
   \end{itemize}
 \end{keybox}
 %----------------------------------------------------------------- hypothesis
@@ -92,7 +93,7 @@
 \end{block}
 %----------------------------------------------------------------- benchmark
 \begin{block}{Benchmark: one sequence, eight near-copies}
-  Uniform i.i.d.\ tokens, vocabulary 16 (4 bits each), $N=4\ldots256$. 900k / 50k / 100k sequences.
+  Uniform i.i.d.\ tokens, vocabulary 16 (4 bits each), $N=4\ldots256$.
   Each comes with \textbf{8 corrupted copies}: one forced change plus $p=\tfrac1{N-1}$ elsewhere, so \textbf{2 changes on average}.
 
   \vspace{0.2in}\centering
@@ -136,85 +137,82 @@
        score $=-$surprise\\ $\phantom{\text{score}}=\sum_j\log p(c_j\mid x,c_{<j})$};
     \node[draw=recog,line width=3pt,fill=recogbg,rounded corners=8pt,text width=5.3in,align=left,
       inner sep=0.2in,anchor=north east,font=\small] (cl) at (12.0,-0.75)
-      {\textcolor{recog}{\bfseries Recognition model}\\ trained on ``is $c=x$?''\\ (BCE, one label per sample)\\
+      {\textcolor{recog}{\bfseries Recognition model}\\ trained on ``is $c=x$?''\\ (BCE, or ranking loss: block 2)\\
        score $=$ logit at the last token};
   \end{tikzpicture}
 \end{block}\vspace{-0.55in}
 \end{minipage}\hfill
 %======================================================================= column 2
 \begin{minipage}[t]{15.3in}\vspace{0pt}
-\begin{block}{\textcolor{recall}{1}\enspace Full-size state: recall is easy, the classifier never starts}
+\begin{block}{\textcolor{recall}{1}\enspace Full-size state: recall is easy, recognition needs a curriculum}
   At $128{\times}128$ the \RC{recall model} copies every length almost perfectly (exact copy $0.988$ at $N{=}256$),
   and its surprise ranks the true sequence first in \emph{every} test sample.
-  The \RG{recognition classifier} fails from $N{=}64$ on.
+  The \RG{recognition model}, trained directly, fails from $N{=}64$ on: its loss sits at $\ln 2$ (a constant output) for all 35k steps.
+  The same network learns recall in ${<}1{,}000$ steps, so this is an \textbf{optimisation} failure, not a capacity limit.
 
-  \vspace{0.2in}
-  \includegraphics[width=\linewidth]{full_state.pdf}
-  \figcap{Test on 100k sequences, 10 epochs, seed 0. (b) Classifier BCE, mean over 1{,}000 steps, one line per $N$.}
-  \begin{itemize}
-    \item The loss sits at $\ln 2$ for all 35k steps: a constant output, gradients decay to ${\approx}0.03$.
-    \item Same network learns recall in ${<}1{,}000$ steps $\Rightarrow$ an \textbf{optimisation} failure,
-          not a capacity limit. One label per sample says little about 2 differing tokens out of 256.
-  \end{itemize}
-\end{block}
-
-\begin{block}{\textcolor{curr}{2}\enspace A length curriculum lets the classifier learn}
-  For the first half of training, train on prefixes $16, 32, \ldots, N$ (equal time each),
-  with easy, heavily corrupted negatives fading out.
-  Then switch to full length and the benchmark's copies.
+  \textbf{Length curriculum:} for the first half of training, use prefixes $16, 32, \ldots, N$ (equal time each),
+  with easy, heavily corrupted negatives fading out; then full length.
 
   \vspace{0.2in}
   \includegraphics[width=\linewidth]{curriculum.pdf}
-  \figcap{Validation acc9 (full-length sequences) of the $128{\times}128$ classifier. Curriculum runs: 3 epochs; no-curriculum runs: 10 epochs (first 11k steps shown).}
+  \figcap{Validation acc9 (full-length sequences), $128{\times}128$ recognition model. Curriculum runs: 3 epochs; no-curriculum runs: 10 epochs (first 11k steps shown).}
   \begin{itemize}
-    \item \textcolor{curr}{\textbf{Length curriculum}}: acc9 $=1.000$ at $N{=}128$ and $256$.
-    \item Easy negatives alone fix $N{=}64$ but \textbf{not} $N{=}256$.
-    \item Comparing learned on short prefixes carries over to long ones.
-    \item In the sweep, \textbf{all 42} curriculum-trained classifiers learn; none ends at $\ln 2$.
+    \item \textcolor{curr}{\textbf{Length curriculum}}: acc9 $=1.000$ at $N{=}128$ and $256$. Easy negatives alone fix only $N{=}64$.
+    \item With it, \textbf{all 72} recognition runs of the sweep and seeds train; none ends at $\ln 2$.
+  \end{itemize}
+\end{block}
+
+\begin{block}{\textcolor{recog}{2}\enspace A ranking loss removes the stalls}
+  Some small-state runs still stall below their capacity. Three fixes, each on the 9 configurations with $N{\le}128$
+  where a seed fell short ($16{\times}4$--$16{\times}16$), $\times$ 3 seeds. Fix \textbf{C} trains the same last-token score on
+  (true, corrupted) pairs: loss $=\mathrm{softplus}(s_\text{neg}-s_\text{true})$, i.e.\ \emph{rank}, don't calibrate.
+
+  \vspace{0.15in}
+  \includegraphics[width=\linewidth]{fix.pdf}
+  \figcap{27 runs per version, paired by configuration and seed. $N{=}256$ runs are still being analysed.}
+  \begin{itemize}
+    \item \RG{Ranking loss}: runs below 0.95 drop from 8 to \textbf{1}, the one left was still improving at the last step.
+    \item A shorter curriculum or a lower learning rate alone do \textbf{not} help: they add near-chance runs.
   \end{itemize}
 \end{block}\vspace{-0.55in}
 \end{minipage}\hfill
 %======================================================================= column 3
 \begin{minipage}[t]{15.3in}\vspace{0pt}
-\begin{block}[colframe=navy,boxrule=5pt]{\textcolor{recog}{3}\enspace Shrinking the state: recall goes first}
-  6 state sizes ($16{\times}4$ to $128{\times}128$) $\times$ 7 lengths $\times$ 2 objectives: 84 runs, 10 epochs each,
-  tested on 100k sequences.
+\begin{block}[colframe=navy,boxrule=5pt]{\textcolor{navy}{3}\enspace Shrinking the state: recall goes first}
+  6 state sizes ($16{\times}4$ to $128{\times}128$) $\times$ 7 lengths $\times$ 2 objectives, 10 epochs each, tested on 100k sequences;
+  3 seeds at the three smallest states. Recognition model: BCE + curriculum.
 
-  \vspace{0.2in}
+  \vspace{0.15in}
   \includegraphics[width=\linewidth]{sweep.pdf}
-  \figcap{Test acc9: \RC{recall model's surprise}, \RG{recognition classifier}. Dotted: recall. $N\le32$: all ${\ge}0.87$.}
+  \figcap{Seed 0, test acc9: \RC{recall model's surprise}, \RG{recognition model}. Dotted: recall. $N\le32$: all ${\ge}0.87$.}
 
   \vspace{0.1in}
+  \includegraphics[width=\linewidth]{seeds.pdf}
+  \figcap{Three smallest states, 3 seeds: mean (line), min--max (band), each seed (dots).}
+
   \begin{itemize}
     \item \textbf{Recognition outlasts recall.} At $16{\times}16$, $N{=}256$ the recall model keeps ${\sim}$half the bits
-          (${\ge}536$ of 1{,}024) and copies no sequence exactly, yet both readouts score acc9 ${\ge}0.999$.
-          Surprise reaches 0.98--1.00 while ${\ge}\tfrac13$ of the bits are kept: above the 8-bit checksum.
-    \item \textbf{Smallest state: the classifier wins.} \\
-          \begin{tabular}{@{}lccc@{}}
-            $16{\times}4$ & recall tokens & \RC{surprise} acc9 & \RG{classifier} acc9 \\ \midrule
-            $N{=}128$ & 0.32 & 0.73 & \textbf{1.00} \\
-            $N{=}256$ & 0.18 & 0.43 & \textbf{0.81} \\
-          \end{tabular}\\[0.15em]
-          Still below a 4-bit checksum (0.85): far from the best code the state could hold.
-    \item At $16{\times}8$ surprise is as good or better ($N{=}128$: 1.00 vs.\ 0.87).
+          (${\ge}536$ of 1{,}024) and copies nothing exactly, yet both readouts score acc9 ${\ge}0.996$.
+    \item \textbf{Smallest state: the recognition model wins in every seed.} \\[0.1em]
+          {\small\begin{tabular}{@{}lccc@{}}
+            $16{\times}4$, 3 seeds & recall tokens & \RC{surprise} acc9 & \RG{recognition} acc9 \\ \midrule
+            $N{=}128$ & 0.30 & 0.59 {\color{ink2}[0.09--0.97]} & \textbf{0.99} {\color{ink2}[0.96--1.00]} \\
+            $N{=}256$ & 0.20 & 0.45 {\color{ink2}[0.27--0.63]} & \textbf{0.86} {\color{ink2}[0.78--0.98]} \\
+          \end{tabular}}\\[0.15em]
+          On average level with a 4-bit checksum (0.85); its best seed (0.98) beats the 8-bit one (0.965).
+    \item Near capacity, \RC{surprise} depends on what the memory chose to keep: 0.97, 0.73, 0.09 across seeds at $N{=}128$.
+    \item At $16{\times}8$ the two are about even ($N{=}256$: 0.94 vs.\ 0.98).
   \end{itemize}
-
-  \vspace{0.2in}
-  \RG{The $16{\times}4$ classifier} at $N{=}256$ learns only once the curriculum reaches full-length prefixes:
-  \par\vspace{0.1in}
-  \includegraphics[width=\linewidth]{small_state_curves.pdf}
-  \figcap{Validation acc9, $16{\times}4$, $N{=}256$; shading: curriculum stages. The 3-epoch pilot never left $\ln 2$.}
 \end{block}
 
 \begin{block}{Next}
   \begin{itemize}
-    \item \textbf{Seeds 1--2} at the three smallest states (60 runs): is the $16{\times}4$ win real, and the $16{\times}8$ dips noise?
-    \item \textbf{Longer curriculum} at small states: those runs were still improving.
+    \item Rerun the recognition side at the smallest states with the \textbf{ranking loss}, so the main comparison uses the better-trained model.
     \item \textbf{Harder benchmarks} where checksums fail; $K$ stored sequences per context.
   \end{itemize}
   \vspace{0.1in}
-  {\footnotesize\color{ink2} Seed 0 only. The three smallest states shrink $d_v$ only (fla kernels need $d_k\ge16$);
-   across $16{\times}4$--$16{\times}16$ the parameter count changes by 4\%.\par}
+  {\footnotesize\color{ink2} 3 seeds at $16{\times}4$--$16{\times}16$ for $N\ge16$, seed 0 elsewhere. The three smallest states shrink $d_v$ only
+   (fla kernels need $d_k\ge16$); across them the parameter count changes by 4\%.\par}
 \end{block}\vspace{-0.55in}
 \end{minipage}
 \end{document}
