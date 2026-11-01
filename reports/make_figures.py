@@ -338,6 +338,49 @@ def fig_exp5():
     save(fig, "fig9_exp5.png")
 
 
+def fig_diag():
+    fig, (a, b) = plt.subplots(1, 2, figsize=(11.5, 3.9), width_ratios=[1.3, 1], layout="constrained")
+    for f in sorted((ROOT / "results/diag").glob("diag_k16v4_N32_cls_s*.json")):
+        r = json.loads(f.read_text())
+        ok = r["test"]["recog_acc9"] >= 0.95
+        steps = [x["step"] for x in r["diag"]]
+        loss = [x["loss"] for x in r["diag"]]
+        smooth = [sum(loss[max(0, i - 9):i + 1]) / len(loss[max(0, i - 9):i + 1]) for i in range(len(loss))]
+        a.plot(steps, smooth, lw=1.4, color=SERIES[0] if ok else SERIES[1], alpha=0.85,
+               label=("acc9 >= 0.95" if ok else "acc9 < 0.95"))
+    a.axvline(0.5 * 35156, color=MUTED, lw=1)
+    a.annotate("curriculum ends", (0.5 * 35156, 0.72), xytext=(4, 0), textcoords="offset points", color=MUTED, fontsize=8.5, va="top")
+    a.set_ylim(0, 0.75)
+    a.set_xlabel("training step")
+    a.set_ylabel("train loss (BCE, mean of 10 logs)")
+    a.set_title("a  16x4, N=32: eight runs of the same configuration")
+    a.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{v / 1000:.0f}k"))
+    h, l = a.get_legend_handles_labels()
+    seen = {}
+    for hh, ll in zip(h, l):
+        seen.setdefault(ll, hh)
+    a.legend(seen.values(), seen.keys(), fontsize=8.5, loc="upper right", bbox_to_anchor=(1, 0.9))
+    probe = json.loads((ROOT / "results/diag/probe.json").read_text())
+    kinds = [("sub1", "1 sub."), ("sub2_random", "2 subs."), ("sub2_cancel", "2 subs.\nsum kept"),
+             ("swap_adjacent", "adjacent\nswap"), ("swap_far", "far\nswap"), ("shuffle", "shuffle")]
+    for j, (ok, col, label) in enumerate([(True, SERIES[0], "acc9 >= 0.95 (18 runs)"), (False, SERIES[1], "acc9 < 0.95 (10 runs)")]):
+        rs = [r for r in probe.values() if (r["acc9"] >= 0.95) == ok]
+        for i, (k, _) in enumerate(kinds):
+            x = i + (j - 0.5) * 0.3
+            b.scatter([x] * len(rs), [r[k] for r in rs], s=14, color=col, alpha=0.5, lw=0, zorder=2)
+            b.scatter([x], [sum(r[k] for r in rs) / len(rs)], s=60, marker="_", color=col, linewidth=2.5, zorder=3,
+                      label=label if i == 0 else None)
+    b.axhline(0.5, color=MUTED, lw=1, zorder=1)
+    b.annotate("chance", (1, 0.5), xycoords=("axes fraction", "data"), xytext=(-4, 4), textcoords="offset points", ha="right", color=MUTED, fontsize=8.5)
+    b.set_xticks(range(len(kinds)), [lab for _, lab in kinds])
+    b.grid(axis="x", visible=False)
+    b.set_ylim(0.45, 1.02)
+    b.set_ylabel("true sequence scored higher")
+    b.set_title("b  Saved models vs edits that keep token counts")
+    b.legend(fontsize=8, loc="lower left")
+    save(fig, "fig10_diag.png")
+
+
 if __name__ == "__main__":
     fig_first_grid()
     fig_plateau()
@@ -348,3 +391,4 @@ if __name__ == "__main__":
     fig_seeds()
     fig_fix()
     fig_exp5()
+    fig_diag()
