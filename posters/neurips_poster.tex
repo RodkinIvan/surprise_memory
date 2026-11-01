@@ -155,10 +155,10 @@
 
   \vspace{0.2in}
   \includegraphics[width=\linewidth]{curriculum.pdf}
-  \figcap{Validation acc9 (full-length sequences), $128{\times}128$ recognition model. Curriculum runs: 3 epochs; no-curriculum runs: 10 epochs (first 11k steps shown).}
+  \figcap{Validation acc9 (full length), $128{\times}128$. Curriculum runs: 3 epochs; others: 10 (first 11k steps).}
   \begin{itemize}
     \item \textcolor{curr}{\textbf{Length curriculum}}: acc9 $=1.000$ at $N{=}128$ and $256$. The warm-up alone fixes only $N{=}64$.
-    \item With it, \textbf{all 72} recognition runs of the sweep and seeds train; none ends at $\ln 2$.
+    \item With it, \textbf{all 72} sweep and seed runs train; none ends at $\ln 2$.
   \end{itemize}
 \end{block}
 
@@ -172,8 +172,14 @@
   \figcap{Recognition model, \textcolor{recog!45}{\textbf{baseline}} and \RG{ranking loss}, 3 runs per configuration ($16{\times}4$--$16{\times}16$).
   (a) hollow: $N{=}256$. (b) filled: 10 epochs; hollow: 20, more curriculum time on long prefixes.}
   \begin{itemize}
-    \item Up to $N{=}128$ the \RG{ranking loss} fails less (2 vs.\ 7 of 33 runs below 0.95; $p{=}0.07$): suggestive, not significant. It also collapses (0.06).
-    \item At $N{=}256$ it is worse (0.92 vs.\ 0.96), and 20 epochs hurt both: $16{\times}4$ 0.63/0.60 vs.\ 0.91/0.84.
+    \item Up to $N{=}128$ the \RG{ranking loss} fails less (2 vs.\ 7 of 33 below 0.95; $p{=}0.07$): suggestive, not significant. It also collapses (0.06).
+    \item At $N{=}256$ it is worse (0.92 vs.\ 0.96), and 20 epochs hurt both (b).
+  \end{itemize}
+  \textbf{What a failed run is} (28 instrumented reruns):
+  \begin{itemize}
+    \item \textbf{The right comparison, less precise.} It uses order (shuffles caught 0.995) and is no sum checksum
+          (sum-kept edits 0.936 = random 0.937), but catches a single change 0.89 vs.\ 0.997.
+    \item \textbf{Decided during the curriculum:} 78--81\% vs.\ 98--99\% single-change detection at its end; only 86--90\% after.
   \end{itemize}
 \end{block}\vspace{-0.55in}
 \end{minipage}\hfill
@@ -208,7 +214,8 @@
 
 \begin{block}{Next}
   \begin{itemize}
-    \item \textbf{More runs per cell} (6--10, both readouts) to measure failure rates; find why runs collapse.
+    \item \textbf{More runs per cell} (6--10, both readouts) to measure failure rates.
+    \item \textbf{Train precision early}: keep 1--2-token negatives from the start, or restart weak runs.
     \item \textbf{Harder benchmarks} where checksums fail; $K$ stored sequences per context.
   \end{itemize}
   \vspace{0.1in}

@@ -221,7 +221,7 @@ def fig_fresh():
     """Experiment 5: fresh seeds 3-5 (a), and 10 vs 20 epochs at N=256 (b); recognition-model test acc9."""
     e5 = load("results/exp5/summary.json")
     versions = [("baseline (BCE)", "base", RECOG_L), ("ranking loss", "C", RECOG)]
-    fig, (a, b) = plt.subplots(1, 2, figsize=(W, 4.1), width_ratios=[2.6, 1], layout="constrained")
+    fig, (a, b) = plt.subplots(1, 2, figsize=(W, 3.6), width_ratios=[2.6, 1], layout="constrained")
     for row, (label, key, col) in enumerate(versions):
         runs = [(acc, cfg.endswith("N256")) for j, (cfg, d) in enumerate(e5["fresh"].items()) for acc in d[key]]
         y = [row + ((j * 7) % 11 - 5) * 0.045 for j in range(len(runs))]
