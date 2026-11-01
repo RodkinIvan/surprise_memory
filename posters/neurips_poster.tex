@@ -220,7 +220,7 @@
 \begin{block}{Next}
   \begin{itemize}
     \item \textbf{More runs per cell} (6--10, both readouts) to measure failure rates.
-    \item \textbf{Restarts}: train several starts for ${\sim}$5k steps, continue the lowest-loss one. Training changes so far (fixes, ranking loss, early small-edit negatives) don't remove the failures.
+    \item \textbf{Restarts}: train several starts for ${\sim}$5k steps, continue the lowest-loss one; needs testing, as the step-4k loss predicts the outcome only weakly ($\rho{=}{-}0.47$). Training changes so far (fixes, ranking loss, early small-edit negatives) don't remove the failures.
     \item \textbf{Harder benchmarks} where checksums fail; $K$ stored sequences per context.
   \end{itemize}
   \vspace{0.1in}
