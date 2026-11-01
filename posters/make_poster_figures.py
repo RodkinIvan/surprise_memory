@@ -255,6 +255,6 @@ def fig_fresh():
 
 if __name__ == "__main__":
     fig_curriculum()
-    fig_sweep()
+    # fig_sweep()  # replaced on the poster by the longest-length table
     fig_seeds()
     fig_fresh()

@@ -78,8 +78,8 @@
   {\fontsize{44}{52}\selectfont\bfseries Takeaway\par}\vspace{0.2in}
   A memory can tell whether an input is familiar long after it can no longer reproduce it.
   \begin{itemize}[label=\textcolor{white}{\textbullet}]
-    \item Shrinking a GDN-2 state, \textbf{exact recall fails first}: at $16{\times}16$, $N{=}256$ nothing is copied exactly,
-          yet both readouts score acc9 ${\ge}0.996$.
+    \item Shrinking a GDN-2 state, \textbf{exact recall fails first}: small states still recognise sequences
+          \textbf{2--8$\times$} longer than they can copy.
     \item At $16{\times}4$, $N{=}256$ the memory \textbf{trained for recognition} is ahead:
           acc9 \textbf{0.88} [0.74--1.00] vs.\ \textbf{0.45} [0.27--0.63] for surprise (chance 0.11).
     \item Training it needs a \textbf{length curriculum}, and at small states it is \textbf{not reproducible}: the same seed can learn or collapse.
@@ -190,16 +190,20 @@
   3 seeds at the three smallest states. Recognition model: BCE + length curriculum.
 
   \vspace{0.15in}
-  \includegraphics[width=\linewidth]{sweep.pdf}
-  \figcap{Seed 0, test acc9: \RC{recall model's surprise}, \RG{recognition model}. Dotted: recall. $N\le32$: all ${\ge}0.87$.}
-
-  \vspace{0.1in}
   \includegraphics[width=\linewidth]{seeds.pdf}
-  \figcap{Three smallest states, seeds 0--2: mean (line), min--max (band), each seed (dots).}
+  \figcap{Three smallest states, seeds 0--2, test acc9 and recall: mean (line), min--max (band), each seed (dots).}
 
   \begin{itemize}
-    \item \textbf{Recognition outlasts recall.} At $16{\times}16$, $N{=}256$ the recall model keeps ${\sim}$half the bits
-          (${\ge}536$ of 1{,}024) and copies nothing exactly, yet both readouts score acc9 ${\ge}0.996$.
+    \item \textbf{Recognition outlasts recall.} Longest length that passes (powers of 2 tested): \\[0.1em]
+          {\small\begin{tabular}{@{}lcccccc@{}}
+            state & $16{\times}4$ & $16{\times}8$ & $16{\times}16$ & $32{\times}32$ & $64{\times}64$ & $128{\times}128$ \\ \midrule
+            exact copy ${\ge}0.9$ & 32 & 32 & 64 & 128 & 128 & ${\ge}256$ \\
+            \RC{surprise} acc9 ${\ge}0.99$ & 64 & 128 & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ \\
+            \RG{recognition}$^{*}$ acc9 ${\ge}0.99$ & \textbf{128} & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ \\
+          \end{tabular}}\\[0.15em]
+          At the three smallest states recognition reaches \textbf{2--8$\times$} the copy length; from $32{\times}32$ up, $N{=}256$ hides the gap.
+          At $16{\times}16$, $N{=}256$ the recall model keeps ${\ge}536$ of 1{,}024 bits, copies nothing exactly, yet both readouts score ${\ge}0.996$.
+          {\color{ink2}$^{*}$Best of the 3 sweep runs (1 from $32{\times}32$ up); the median run fails at shorter lengths. Bar 0.99: an 8-bit checksum already scores 0.965.}
     \item \textbf{Smallest state: the recognition model is ahead.} \\[0.1em]
           {\small\begin{tabular}{@{}lccc@{}}
             $16{\times}4$ & recall tokens & \RC{surprise}, 3 runs & \RG{recognition}, 6 runs \\ \midrule
