@@ -1,0 +1,254 @@
+{
+ "reconstruct/0.9/16x4": {
+  "best": 32,
+  "best_monotone": true,
+  "median": 32,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "reconstruct/0.9/16x8": {
+  "best": 32,
+  "best_monotone": true,
+  "median": 32,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "reconstruct/0.9/16x16": {
+  "best": 64,
+  "best_monotone": true,
+  "median": 64,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "reconstruct/0.9/32x32": {
+  "best": 128,
+  "best_monotone": true,
+  "median": 128,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "reconstruct/0.9/64x64": {
+  "best": 128,
+  "best_monotone": true,
+  "median": 128,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "reconstruct/0.9/128x128": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "reconstruct/0.5/16x4": {
+  "best": 32,
+  "best_monotone": true,
+  "median": 32,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "reconstruct/0.5/16x8": {
+  "best": 32,
+  "best_monotone": true,
+  "median": 32,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "reconstruct/0.5/16x16": {
+  "best": 64,
+  "best_monotone": true,
+  "median": 64,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "reconstruct/0.5/32x32": {
+  "best": 128,
+  "best_monotone": true,
+  "median": 128,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "reconstruct/0.5/64x64": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "reconstruct/0.5/128x128": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "surprise/0.99/16x4": {
+  "best": 64,
+  "best_monotone": true,
+  "median": 64,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "surprise/0.99/16x8": {
+  "best": 128,
+  "best_monotone": true,
+  "median": 128,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "surprise/0.99/16x16": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "surprise/0.99/32x32": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "surprise/0.99/64x64": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "surprise/0.99/128x128": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "surprise/0.95/16x4": {
+  "best": 128,
+  "best_monotone": true,
+  "median": 64,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "surprise/0.95/16x8": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "surprise/0.95/16x16": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "surprise/0.95/32x32": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "surprise/0.95/64x64": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "surprise/0.95/128x128": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "recognition_model/0.99/16x4": {
+  "best": 128,
+  "best_monotone": true,
+  "median": 128,
+  "median_monotone": false,
+  "runs": 3
+ },
+ "recognition_model/0.99/16x8": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 128,
+  "median_monotone": false,
+  "runs": 3
+ },
+ "recognition_model/0.99/16x16": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": false,
+  "runs": 3
+ },
+ "recognition_model/0.99/32x32": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "recognition_model/0.99/64x64": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "recognition_model/0.99/128x128": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "recognition_model/0.95/16x4": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 128,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "recognition_model/0.95/16x8": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 3
+ },
+ "recognition_model/0.95/16x16": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": false,
+  "runs": 3
+ },
+ "recognition_model/0.95/32x32": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "recognition_model/0.95/64x64": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ },
+ "recognition_model/0.95/128x128": {
+  "best": 256,
+  "best_monotone": true,
+  "median": 256,
+  "median_monotone": true,
+  "runs": 1
+ }
+}
