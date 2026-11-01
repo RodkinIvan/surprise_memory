@@ -168,6 +168,32 @@ class LocalState(unittest.TestCase):
         self.assertEqual(sum("connection back: h1" in x for x in lines), 1)
         self.assertIn("all 1 jobs finished", lines[-1])
 
+    def test_place_holds_back_unused_gb_of_running_jobs(self):
+        import types
+        sys.path.insert(0, str(SRC.parent))
+        import hostq
+        w = hostq.Worker(types.SimpleNamespace(gpus=None, per_gpu=4, headroom=4.0, ramp=180.0, cpu_slots=1))
+        started = []
+        w.start = lambda key, j, gpus: started.append((key, gpus))
+        old = time.time() - 3600       # long past the ramp: before the fix, its gb was no longer reserved
+        jobs = {"run1": {"state": "running", "assigned": [0], "gb": 18, "pid": 111, "started_ts": old},
+                "run2": {"state": "running", "assigned": [0], "gb": 18, "pid": 222, "started_ts": old},
+                "new": {"state": "queued", "gb": 18, "order": 1}}
+        orig = hostq.gpu_state, hostq.job_gpu_usage
+        self.addCleanup(lambda: (setattr(hostq, "gpu_state", orig[0]), setattr(hostq, "job_gpu_usage", orig[1])))
+        hostq.gpu_state = lambda: {0: (47.0 - 9 - 9, 47.0)}      # both use 9 GB so far, on their way to 14-18
+        hostq.job_gpu_usage = lambda: {(111, 0): 9.0, (222, 0): 9.0}
+        w.place(jobs)
+        self.assertEqual(started, [])   # 29 GB free, but 18 GB are still owed to the running jobs: 11 < 18 + 4
+        hostq.job_gpu_usage = lambda: {(111, 0): 18.0, (222, 0): 18.0}
+        hostq.gpu_state = lambda: {0: (47.0 - 36, 47.0)}
+        w.place(jobs)
+        self.assertEqual(started, [])   # they use all of their gb: 11 GB free < 22
+        hostq.gpu_state = lambda: {0: (47.0, 47.0)}
+        hostq.job_gpu_usage = lambda: None                        # nvidia-smi can't tell: fall back to the ramp rule
+        w.place(jobs)
+        self.assertEqual(started, [("new", [0])])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

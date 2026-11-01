@@ -90,6 +90,34 @@ def gpu_state() -> dict:
     return gpus
 
 
+def job_gpu_usage() -> dict | None:
+    """(session id, GPU index) -> GB used by the processes of that session, from nvidia-smi; None if it can't tell.
+
+    A job runs in its own session whose id is the pid hostq recorded, so its processes are found by their session id."""
+    try:
+        idx = subprocess.run(["nvidia-smi", "--query-gpu=index,uuid", "--format=csv,noheader"],
+                             capture_output=True, text=True, timeout=60).stdout
+        apps = subprocess.run(["nvidia-smi", "--query-compute-apps=pid,gpu_uuid,used_memory", "--format=csv,noheader,nounits"],
+                              capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if apps.returncode != 0:
+        return None
+    uuid = {u.strip(): int(i) for i, u in (line.split(",", 1) for line in idx.splitlines() if "," in line) if i.strip().isdigit()}
+    usage = {}
+    for line in apps.stdout.splitlines():
+        parts = [x.strip() for x in line.split(",")]
+        if len(parts) != 3 or not parts[0].isdigit() or parts[1] not in uuid:
+            continue
+        try:
+            sid = os.getsid(int(parts[0]))
+            used = float(parts[2]) / 1024
+        except (OSError, ValueError):
+            continue
+        usage[(sid, uuid[parts[1]])] = usage.get((sid, uuid[parts[1]]), 0.0) + used
+    return usage
+
+
 class Worker:
     def __init__(self, a):
         self.a = a
@@ -173,10 +201,13 @@ class Worker:
         allowed = [i for i in gpus if self.a.gpus is None or i in self.a.gpus]
         load = {i: 0 for i in allowed}
         reserved = {i: 0.0 for i in allowed}
+        usage = job_gpu_usage()
         for j in running:
             for i in j.get("assigned", []):
                 load[i] = load.get(i, 0) + 1
-                if time.time() - j.get("started_ts", 0) < self.a.ramp:   # its memory may not show in nvidia-smi yet
+                if usage is not None:   # hold back the part of its gb it doesn't use yet: memory can peak late (e.g. at evaluation)
+                    reserved[i] = reserved.get(i, 0.0) + max(0.0, j.get("gb", 0.0) - usage.get((j.get("pid"), i), 0.0))
+                elif time.time() - j.get("started_ts", 0) < self.a.ramp:   # its memory may not show in nvidia-smi yet
                     reserved[i] = reserved.get(i, 0.0) + j.get("gb", 0.0)
         cpu_running = sum(1 for j in running if not j.get("assigned"))
         for key, j in queued:
