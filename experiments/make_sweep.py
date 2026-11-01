@@ -85,11 +85,12 @@ def main():
     (here / "jobs_hard.json").write_text(json.dumps(spec, indent=1))
     # longer sequences than the Hub has (generated on each host, same generator and seeds) where states still recall or
     # recognise at N=256; fresh negatives after the curriculum, since the stored train copies would take 3.7-7.4 GB per job
-    long = [job(f"long_k{k}v{v}_N{n}_{obj}_s{seed}", n, k, v, obj, 10, " --train_neg fresh", seed=seed, hosts=SEED_HOSTS)
-            for n in (512, 1024) for obj, states in (("cls", STATES), ("lm", STATES[2:])) for k, v in states
+    # mbz_nlp's GPUs were full of other users' jobs on 2026-11-01 22:50; N=1024 first, as those take longest
+    long = [job(f"long_k{k}v{v}_N{n}_{obj}_s{seed}", n, k, v, obj, 10, " --train_neg fresh", seed=seed, hosts=["mbz_nlp2", "mbz_nlp2.07"])
+            for n in (1024, 512) for obj, states in (("cls", STATES), ("lm", STATES[2:])) for k, v in states
             for seed in ((0, 1, 2) if k * v <= 256 else (0,))]
     for j in long:
-        j["gb"] = 24 if "_N1024_" in j["name"] else 14
+        j["gb"] = 18 if "_N1024_" in j["name"] else 10   # smoke run: 14.3 GB peak at N=1024 (128x128)
     (here / "jobs_long.json").write_text(json.dumps(jobs_file("long", long), indent=1))
     long_smoke = [job(f"long_smoke_k128v128_N1024_{obj}", 1024, 128, 128, obj, 0.05, " --train_neg fresh --test_samples 2000 --eval_every 100",
                       hosts=["mbz_nlp2.07"]) for obj in OBJECTIVES]
