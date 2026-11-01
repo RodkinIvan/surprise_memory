@@ -109,9 +109,9 @@ def fig_curriculum():
         256: [("none", grid(256, "cls")), ("hard", smoke("smoke_k128v128_N256_cls")),
               ("length", smoke("smoke2_k128v128_N256_cls"))],
     }
-    style = {"none": (NONE, "no curriculum"), "hard": (RECOG, "easy negatives first"),
-             "length": (CURR, "length curriculum (prefixes 16 … N)")}
-    fig, axes = plt.subplots(1, 3, figsize=(W, 5.0), sharey=True, layout="constrained")
+    style = {"none": (NONE, "no curriculum"), "hard": (RECOG, "easy-negative warm-up"),
+             "length": (CURR, "length curriculum + warm-up")}
+    fig, axes = plt.subplots(1, 3, figsize=(W, 4.5), sharey=True, layout="constrained")
     for ax, (n, rs) in zip(axes, runs.items()):
         for key, r in rs:
             s, y = curve(r, "recog_acc9")
@@ -126,7 +126,7 @@ def fig_curriculum():
     axes[0].set_ylabel("validation acc9")
     axes[0].set_ylim(-0.04, 1.08)
     handles = {h.get_label(): h for ax in axes for h in ax.get_lines() if not h.get_label().startswith("_")}
-    order = ["no curriculum", "easy negatives first", "length curriculum (prefixes 16 … N)"]
+    order = ["no curriculum", "easy-negative warm-up", "length curriculum + warm-up"]
     fig.legend([handles[k] for k in order], order, loc="outside upper center", ncol=3, columnspacing=1.6)
     save(fig, "curriculum.pdf")
 
@@ -217,35 +217,41 @@ def fig_seeds(lengths=(16, 32, 64, 128, 256)):
     save(fig, "seeds.pdf")
 
 
-FIX_CONFIGS = [(4, 16), (4, 32), (4, 64), (4, 128), (8, 32), (8, 64), (8, 128), (16, 32), (16, 64)]
+FIX_CONFIGS = [(4, 16), (4, 32), (4, 64), (4, 128), (4, 256), (8, 32), (8, 64), (8, 128), (8, 256), (16, 32), (16, 64)]
 
 
 def fig_fix():
-    """Experiment 4, N <= 128: recognition-model acc9 of every config x seed under each training version."""
+    """Experiment 4: recognition-model acc9 of every config x seed under each training version; N=256 runs hollow."""
     versions = [("baseline (BCE)", None, RECOG_L), ("A  prefixes from 4", "A", MUTED),
                 ("B  A + lr 3e-4", "B", MUTED), ("C  A + ranking loss", "C", RECOG)]
-    fig, ax = plt.subplots(figsize=(W, 4.4), layout="constrained")
+    fig, ax = plt.subplots(figsize=(W, 4.0), layout="constrained")
     for row, (label, ver, col) in enumerate(versions):
-        acc = []
-        for i, (v, n) in enumerate(FIX_CONFIGS):
+        acc, long_ = [], []
+        for v, n in FIX_CONFIGS:
             for s in range(3):
                 r = sweep(16, v, n, "cls", s) if ver is None else load(f"results/fix/fix{ver}_k16v{v}_N{n}_cls_s{s}.json")
                 acc.append(r["test"]["recog_acc9"])
-        jitter = [((j * 7) % 9 - 4) * 0.045 for j in range(len(acc))]
-        ax.scatter(acc, [row + d for d in jitter], s=110, color=col, alpha=0.8, lw=0, zorder=3)
-        low = sum(a < 0.95 for a in acc)
-        ax.annotate(f"mean {sum(acc) / len(acc):.3f}   ·   {low} below 0.95", (1, row), xycoords=("axes fraction", "data"),
-                    xytext=(14, 0), textcoords="offset points", va="center", color=TEXT2, fontsize=20)
+                long_.append(n == 256)
+        y = [row + ((j * 7) % 11 - 5) * 0.04 for j in range(len(acc))]
+        short = [(a, yi) for a, yi, l in zip(acc, y, long_) if not l]
+        ax.scatter(*zip(*short), s=110, color=col, alpha=0.8, lw=0, zorder=3)
+        ax.scatter(*zip(*[(a, yi) for a, yi, l in zip(acc, y, long_) if l]), s=110, facecolor="none",
+                   edgecolor=col, lw=2.5, zorder=3)
+        ax.annotate(f"mean {sum(acc) / len(acc):.3f}   ·   {sum(a < 0.95 for a in acc)} below 0.95",
+                    (1, row), xycoords=("axes fraction", "data"), xytext=(14, 0), textcoords="offset points",
+                    va="center", color=TEXT2, fontsize=20)
     ax.axvline(0.852, color=MUTED, lw=2, ls=(0, (4, 3)), zorder=1)
     ax.annotate("4-bit checksum", (0.852, -0.62), ha="right", va="bottom", color=MUTED, fontsize=18,
                 xytext=(-6, 0), textcoords="offset points")
+    ax.scatter([], [], s=110, color=MUTED, lw=0, label="N ≤ 128")
+    ax.scatter([], [], s=110, facecolor="none", edgecolor=MUTED, lw=2.5, label="N = 256")
+    ax.legend(loc="upper left", bbox_to_anchor=(0.01, 0.97), ncol=2, handletextpad=0.3)
     ax.set_yticks(range(len(versions)), [v[0] for v in versions])
     ax.set_ylim(len(versions) - 0.5, -0.7)
     ax.set_xlim(0, 1.02)
     ax.grid(axis="y", visible=False)
     ax.set_xlabel("test acc9 of the recognition model (one dot per configuration and seed)")
     save(fig, "fix.pdf")
-
 
 if __name__ == "__main__":
     fig_curriculum()

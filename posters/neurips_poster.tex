@@ -80,9 +80,9 @@
   \begin{itemize}[label=\textcolor{white}{\textbullet}]
     \item Shrinking a GDN-2 state, \textbf{exact recall fails first}: at $16{\times}16$, $N{=}256$ nothing is copied exactly,
           yet both readouts score acc9 ${\ge}0.996$.
-    \item At the smallest state ($16{\times}4$) the memory \textbf{trained for recognition} wins in \textbf{every seed}:
-          acc9 \textbf{0.86} vs.\ \textbf{0.45} for surprise at $N{=}256$ (chance 0.11).
-    \item Its training needs a \textbf{curriculum} and a \textbf{ranking loss}.
+    \item At the smallest state ($16{\times}4$) the memory \textbf{trained for recognition} wins in \textbf{3 of 3 runs}:
+          acc9 \textbf{0.86} [0.78--0.98] vs.\ \textbf{0.45} [0.27--0.63] for surprise at $N{=}256$ (chance 0.11).
+    \item Training it needs a \textbf{length curriculum}.
   \end{itemize}
 \end{keybox}
 %----------------------------------------------------------------- hypothesis
@@ -151,28 +151,31 @@
   The same network learns recall in ${<}1{,}000$ steps, so this is an \textbf{optimisation} failure, not a capacity limit.
 
   \textbf{Length curriculum:} for the first half of training, use prefixes $16, 32, \ldots, N$ (equal time each),
-  with easy, heavily corrupted negatives fading out; then full length.
+  plus an \textbf{easy-negative warm-up} (heavily corrupted negatives that fade out); then full length.
 
   \vspace{0.2in}
   \includegraphics[width=\linewidth]{curriculum.pdf}
   \figcap{Validation acc9 (full-length sequences), $128{\times}128$ recognition model. Curriculum runs: 3 epochs; no-curriculum runs: 10 epochs (first 11k steps shown).}
   \begin{itemize}
-    \item \textcolor{curr}{\textbf{Length curriculum}}: acc9 $=1.000$ at $N{=}128$ and $256$. Easy negatives alone fix only $N{=}64$.
+    \item \textcolor{curr}{\textbf{Length curriculum}}: acc9 $=1.000$ at $N{=}128$ and $256$. The warm-up alone fixes only $N{=}64$.
     \item With it, \textbf{all 72} recognition runs of the sweep and seeds train; none ends at $\ln 2$.
   \end{itemize}
 \end{block}
 
-\begin{block}{\textcolor{recog}{2}\enspace A ranking loss removes the stalls}
-  Some small-state runs still stall below their capacity. Three fixes, each on the 9 configurations with $N{\le}128$
-  where a seed fell short ($16{\times}4$--$16{\times}16$), $\times$ 3 seeds. Fix \textbf{C} trains the same last-token score on
+\begin{block}{\textcolor{recog}{2}\enspace A ranking loss? A hypothesis, not a fix}
+  Some small-state runs stall below their capacity. Three fixes were tried on the 11 configurations
+  ($16{\times}4$--$16{\times}16$) where a baseline run fell short, seeds 0--2. Fix \textbf{C} trains the same last-token score on
   (true, corrupted) pairs: loss $=\mathrm{softplus}(s_\text{neg}-s_\text{true})$, i.e.\ \emph{rank}, don't calibrate.
 
   \vspace{0.15in}
   \includegraphics[width=\linewidth]{fix.pdf}
-  \figcap{27 runs per version, paired by configuration and seed. $N{=}256$ runs are still being analysed.}
+  \figcap{33 runs per version. Same seed numbers, but \emph{not} paired runs.}
   \begin{itemize}
-    \item \RG{Ranking loss}: runs below 0.95 drop from 8 to \textbf{1}, the one left was still improving at the last step.
-    \item A shorter curriculum or a lower learning rate alone do \textbf{not} help: they add near-chance runs.
+    \item \textbf{No fix beats the baseline on average} (\RG{C} 0.940 vs.\ 0.959).
+    \item Up to $N{=}128$, \RG{C} has 1 run below 0.95 against 8; but that cut was made after seeing the results,
+          and configurations picked for a weak baseline run favour \emph{any} fix (regression to the mean).
+    \item At $N{=}256$, $16{\times}4$, \RG{C} is worse: 0.58 vs.\ 0.86 (slow runs, not stuck).
+    \item Fresh seeds for both, and longer training, are running.
   \end{itemize}
 \end{block}\vspace{-0.55in}
 \end{minipage}\hfill
@@ -193,13 +196,14 @@
   \begin{itemize}
     \item \textbf{Recognition outlasts recall.} At $16{\times}16$, $N{=}256$ the recall model keeps ${\sim}$half the bits
           (${\ge}536$ of 1{,}024) and copies nothing exactly, yet both readouts score acc9 ${\ge}0.996$.
-    \item \textbf{Smallest state: the recognition model wins in every seed.} \\[0.1em]
+    \item \textbf{Smallest state: the recognition model wins in 3 of 3 runs.} \\[0.1em]
           {\small\begin{tabular}{@{}lccc@{}}
             $16{\times}4$, 3 seeds & recall tokens & \RC{surprise} acc9 & \RG{recognition} acc9 \\ \midrule
             $N{=}128$ & 0.30 & 0.59 {\color{ink2}[0.09--0.97]} & \textbf{0.99} {\color{ink2}[0.96--1.00]} \\
             $N{=}256$ & 0.20 & 0.45 {\color{ink2}[0.27--0.63]} & \textbf{0.86} {\color{ink2}[0.78--0.98]} \\
           \end{tabular}}\\[0.15em]
-          On average level with a 4-bit checksum (0.85); its best seed (0.98) beats the 8-bit one (0.965).
+          Three runs per cell is little evidence, but the margins are large. On average level with a 4-bit
+          checksum (0.85); its best run (0.98) beats the 8-bit one (0.965).
     \item Near capacity, \RC{surprise} depends on what the memory chose to keep: 0.97, 0.73, 0.09 across seeds at $N{=}128$.
     \item At $16{\times}8$ the two are about even ($N{=}256$: 0.94 vs.\ 0.98).
   \end{itemize}
@@ -207,7 +211,7 @@
 
 \begin{block}{Next}
   \begin{itemize}
-    \item Rerun the recognition side at the smallest states with the \textbf{ranking loss}, so the main comparison uses the better-trained model.
+    \item \textbf{Fresh seeds} (running): is any training version reliable at the smallest states? If so, rerun the small-state sweep with it.
     \item \textbf{Harder benchmarks} where checksums fail; $K$ stored sequences per context.
   \end{itemize}
   \vspace{0.1in}
