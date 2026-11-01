@@ -24,3 +24,6 @@ logs_router_gdn2.txt
 *.synctex.gz
 *.fls
 *.fdb_latexmk
+
+# model weights
+/ckpt/

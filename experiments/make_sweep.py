@@ -1,6 +1,6 @@
 """Write the jobs files of the state-size sweep: recall (lm) vs recognition (cls) memory.
 
-  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5}.json
+  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke}.json
 Submit with:  python3 tools/hostq.py submit experiments/jobs_sweep.json
 """
 
@@ -66,8 +66,17 @@ def main():
     # the current code at default flags must reproduce the sweep (whose code is experiments/archive/train_gdn2_56a994.py)
     exp5 += [job(f"repro_k{k}v{v}_N{n}_cls_s0", n, k, v, "cls", 10, hosts=SEED_HOSTS) for k, v, n in [(16, 4, 32), (16, 8, 128)]]
     (here / "jobs_exp5.json").write_text(json.dumps(jobs_file("exp5", exp5), indent=1))
+    # collapse diagnosis: repeated runs of the sweep's recognition training, with gate/gradient/logit logs and saved weights
+    diag_flags = " --diag_every 100 --save ckpt/diag/{name}.pt"
+    diag = [job(f"diag_k{k}v{v}_N{n}_cls_s{seed}", n, k, v, "cls", 10, diag_flags, seed=seed, hosts=SEED_HOSTS)
+            for k, v, n, runs in [(16, 4, 16, 12), (16, 4, 32, 8), (16, 8, 128, 8)] for seed in range(100, 100 + runs)]
+    diag_smoke = [job("diag_smoke", 16, 16, 4, "cls", 0.3, diag_flags + " --eval_every 200", hosts=SEED_HOSTS)]
+    for name, js in (("diag", diag), ("diag_smoke", diag_smoke)):
+        spec = jobs_file(name, js)
+        spec["fetch"].append("ckpt/diag/{name}.pt")
+        (here / f"jobs_{name}.json").write_text(json.dumps(spec, indent=1))
     (here / "jobs_sweep_smoke.json").write_text(json.dumps(jobs_file("sweep_smoke", smoke), indent=1))
-    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs")
+    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs")
 
 
 if __name__ == "__main__":

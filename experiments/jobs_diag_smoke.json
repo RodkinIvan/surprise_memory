@@ -1,0 +1,27 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py"
+ ],
+ "fetch": [
+  "results/diag_smoke/{name}.json",
+  "ckpt/diag/{name}.pt"
+ ],
+ "jobs": [
+  {
+   "name": "diag_smoke",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N16_V16 --objective cls --head_dim 16 --expand_v 0.25 --epochs 0.3 --seed 0 --curriculum 0.5 --diag_every 100 --save ckpt/diag/{name}.pt --eval_every 200 --out results/diag_smoke/diag_smoke.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/diag_smoke/diag_smoke.json"
+   ]
+  }
+ ]
+}

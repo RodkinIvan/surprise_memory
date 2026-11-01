@@ -168,6 +168,85 @@ def evaluate(model, objective, seq_all, cor_all, bs, dev):
     return out
 
 
+class Probe:
+    """Statistics of the GDN-2 gates and of the recognition logit, recorded on the forward passes where `on` is set."""
+
+    def __init__(self, model):
+        self.on, self.stats = False, {}
+        for i, blk in enumerate(model.blocks):
+            at = blk.attn
+            at.f_proj.register_forward_hook(self._decay(f"L{i}", at))
+            at.b_proj.register_forward_hook(self._sigmoid(f"L{i}_write"))
+            at.w_proj.register_forward_hook(self._sigmoid(f"L{i}_wgate"))
+        model.cls_head.register_forward_hook(self._logit)
+
+    def _decay(self, name, at):
+        def hook(mod, inp, out):  # per-step memory decay exp(g), as in GatedDeltaNet2.forward
+            if self.on:
+                with torch.no_grad():
+                    g = F.softplus(out.float() + at.dt_bias).unflatten(-1, (at.num_heads, at.head_k_dim))
+                    d = torch.exp(-at.A_log.float().exp()[:, None] * g)
+                    self.stats.update({f"{name}_decay_mean": d.mean().item(), f"{name}_decay_gt0.999": (d > 0.999).float().mean().item(),
+                                       f"{name}_decay_lt0.5": (d < 0.5).float().mean().item()})
+        return hook
+
+    def _sigmoid(self, name):
+        def hook(mod, inp, out):
+            if self.on:
+                with torch.no_grad():
+                    x = out.float().sigmoid()
+                    self.stats.update({f"{name}_mean": x.mean().item(), f"{name}_lt0.01": (x < 0.01).float().mean().item(),
+                                       f"{name}_gt0.99": (x > 0.99).float().mean().item()})
+        return hook
+
+    def _logit(self, mod, inp, out):
+        if self.on:
+            with torch.no_grad():
+                x = out.float()
+                self.stats.update({"logit_mean": x.mean().item(), "logit_std": x.std().item(), "logit_absmax": x.abs().max().item(),
+                                   "logit_abs_gt10": (x.abs() > 10).float().mean().item()})
+
+
+def grad_norms(model):
+    """Gradient norm per module (before clipping)."""
+    parts = {"embed": model.embed, "cls_head": model.cls_head, "lm_head": model.lm_head}
+    for i, blk in enumerate(model.blocks):
+        parts.update({f"L{i}_attn": blk.attn, f"L{i}_mlp": blk.mlp})
+    return {f"grad_{k}": torch.sqrt(sum((p.grad.float() ** 2).sum() for p in m.parameters() if p.grad is not None)
+                                    + torch.zeros((), device=next(model.parameters()).device)).item() for k, m in parts.items()}
+
+
+@torch.no_grad()
+def detection_profile(model, objective, seq_all, cor_all, bs, dev):
+    """Over corrupted copies with exactly one changed token: how often the true sequence scores higher (ties count 1/2),
+    by the changed position, by the shift (new - old mod 16) and by the original token."""
+    model.eval()
+    n = seq_all.shape[1]
+    win = {"pos": torch.zeros(n, device=dev), "shift": torch.zeros(VOCAB, device=dev), "token": torch.zeros(VOCAB, device=dev)}
+    cnt = {k: torch.zeros_like(v) for k, v in win.items()}
+    for i in range(0, len(seq_all), bs):
+        seq, cor = seq_all[i:i + bs].to(dev).long(), cor_all[i:i + bs].to(dev).long()
+        b = seq.shape[0]
+        cands = torch.cat([seq[:, None], cor], 1).reshape(-1, n)
+        flat_seq = seq[:, None].expand(-1, 9, -1).reshape(-1, n)
+        with torch.autocast("cuda", dtype=torch.bfloat16):
+            score = (-candidate_nll(model, flat_seq, cands)[0].sum(-1) if objective == "lm" else cls_logit(model, flat_seq, cands))
+        score = score.float().view(b, 9)
+        diff = cor != seq[:, None]                                  # [B, 8, N]
+        single = diff.sum(-1) == 1
+        w = (score[:, :1] > score[:, 1:]).float() + 0.5 * (score[:, :1] == score[:, 1:]).float()
+        pos = diff.float().argmax(-1)                               # the changed position, for single changes
+        old = seq.gather(1, pos)
+        new = cor.gather(2, pos[..., None]).squeeze(-1)
+        for key, idx in (("pos", pos), ("shift", (new - old) % VOCAB), ("token", old)):
+            win[key].index_add_(0, idx[single], w[single])
+            cnt[key].index_add_(0, idx[single], torch.ones_like(w[single]))
+    model.train()
+    out = {f"by_{k}": (win[k] / cnt[k].clamp(min=1)).tolist() for k in win}
+    out["n_single"] = int(cnt["pos"].sum().item())
+    return out
+
+
 def param_groups(model, wd):
     decay, no_decay = [], []
     for name, p in model.named_parameters():
@@ -203,6 +282,8 @@ def main():
     p.add_argument("--curriculum", type=float, default=0.0,
                    help="cls: fraction of training spent on a curriculum: prefixes of length cur_min, 2*cur_min, ... N (equal time each)"
                         " with negatives corrupted on the fly, the heavily corrupted share decaying 1 -> 0")
+    p.add_argument("--diag_every", type=int, default=0, help="log gradient, gate and logit statistics every this many steps")
+    p.add_argument("--save", default=None, help="save the final weights here")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--data", default="hf_data")
     p.add_argument("--out", required=True)
@@ -234,6 +315,8 @@ def main():
     ends = [sum(lens[:i + 1]) / sum(lens) for i in range(len(lens))]  # --cur_weight length: where each stage ends
     print(f"{a.subset} {a.objective}: {n_params:,} params, {steps} steps", flush=True)
 
+    probe = Probe(model) if a.diag_every else None
+    diag, profiles = [], {}
     curve, t0, run_loss, run_acc, k = [], time.time(), 0.0, 0.0, 0
     perm, pos = torch.randperm(len(tr_seq), device=dev, generator=gen), 0
     for step in range(1, steps + 1):
@@ -248,10 +331,22 @@ def main():
                 stage = (min(int(t * len(lens)), len(lens) - 1) if a.cur_weight == "equal"
                          else next(i for i, e in enumerate(ends) if t < e or i == len(ends) - 1))
                 p_dense, crop = 1 - t, lens[stage]
+            is_diag = bool(a.diag_every) and (step % a.diag_every == 0 or step == 1)
+            if probe:
+                probe.on = is_diag
             loss, acc = loss_fn(model, a.objective, tr_seq[idx], tr_cor[idx], gen, p_dense, crop, a.cls_loss)
+            if probe:
+                probe.on = False
         opt.zero_grad(set_to_none=True)
         loss.backward()
+        if is_diag:
+            parts = grad_norms(model)
         gnorm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        if is_diag:
+            diag.append({"step": step, "loss": loss.item(), "acc": acc.item(), "grad_total": gnorm.item(), "p_dense": p_dense,
+                         "crop": crop or tr_seq.shape[1], **parts, **probe.stats})
+        if a.diag_every and a.objective == "cls" and a.curriculum and step == int(a.curriculum * steps):
+            profiles["curriculum_end"] = {"step": step, **detection_profile(model, a.objective, va_seq, va_cor, eval_bs, dev)}
         opt.step()
         sched.step()
         run_loss, run_acc, k = run_loss + loss.item(), run_acc + acc.item(), k + 1
@@ -265,10 +360,17 @@ def main():
 
     test = evaluate(model, a.objective, te_seq, te_cor, eval_bs, dev)
     print("TEST", json.dumps(test), flush=True)
+    if a.diag_every:
+        profiles["final"] = {"step": steps, **detection_profile(model, a.objective, va_seq, va_cor, eval_bs, dev)}
+    if a.save:
+        Path(a.save).parent.mkdir(parents=True, exist_ok=True)
+        torch.save(model.state_dict(), a.save)
     version = json.loads(Path("CODE_VERSION.json").read_text()) if Path("CODE_VERSION.json").exists() else None
     out = {"args": vars(a), "n_params": n_params, "steps": steps, "test": test, "curve": curve,
            "train_time": time.time() - t0, "host": socket.gethostname(),
            "gpu": torch.cuda.get_device_name(), "code_version": version}
+    if a.diag_every:
+        out.update(diag=diag, profiles=profiles)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     tmp = Path(a.out + ".tmp")
     tmp.write_text(json.dumps(out, indent=1))
