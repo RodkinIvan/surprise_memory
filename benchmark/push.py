@@ -65,6 +65,20 @@ Primary sequences are drawn i.i.d. and are not deduplicated. For N=4 there are o
 validation/test sequence also appears in train. From N=16 up, overlap between splits is
 essentially zero.
 
+## Evaluation protocol
+
+1. Give the memory the primary `sequence` (for example, in context before a separator).
+2. Score `sequence` and each of its {NUM_CORRUPTED} `corrupted` copies with the memory's familiarity signal (for example,
+   minus the summed surprise of the candidate, or a learned score).
+3. Report, over the test split:
+   - **acc9**: the share of samples where `sequence` scores strictly highest among the 9 candidates. A tie for the top
+     score counts as 1/(number tied), so a constant score gives 1/9.
+   - **pairwise**: the share of (`sequence`, corrupted copy) pairs where `sequence` scores higher, with ties counting
+     as 1/2. Chance is 0.5.
+
+Reference points: a memory that keeps only the sum of the tokens mod 16 (4 bits) gets acc9 about 0.85 at every N, and
+one that also keeps a position-weighted sum (8 bits) about 0.97, because the corruptions are small edits.
+
 ## Usage
 
 ```python
