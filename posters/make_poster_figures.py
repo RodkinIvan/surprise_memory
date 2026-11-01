@@ -217,44 +217,44 @@ def fig_seeds(lengths=(16, 32, 64, 128, 256)):
     save(fig, "seeds.pdf")
 
 
-FIX_CONFIGS = [(4, 16), (4, 32), (4, 64), (4, 128), (4, 256), (8, 32), (8, 64), (8, 128), (8, 256), (16, 32), (16, 64)]
-
-
-def fig_fix():
-    """Experiment 4: recognition-model acc9 of every config x seed under each training version; N=256 runs hollow."""
-    versions = [("baseline (BCE)", None, RECOG_L), ("A  prefixes from 4", "A", MUTED),
-                ("B  A + lr 3e-4", "B", MUTED), ("C  A + ranking loss", "C", RECOG)]
-    fig, ax = plt.subplots(figsize=(W, 4.0), layout="constrained")
-    for row, (label, ver, col) in enumerate(versions):
-        acc, long_ = [], []
-        for v, n in FIX_CONFIGS:
-            for s in range(3):
-                r = sweep(16, v, n, "cls", s) if ver is None else load(f"results/fix/fix{ver}_k16v{v}_N{n}_cls_s{s}.json")
-                acc.append(r["test"]["recog_acc9"])
-                long_.append(n == 256)
-        y = [row + ((j * 7) % 11 - 5) * 0.04 for j in range(len(acc))]
-        short = [(a, yi) for a, yi, l in zip(acc, y, long_) if not l]
-        ax.scatter(*zip(*short), s=110, color=col, alpha=0.8, lw=0, zorder=3)
-        ax.scatter(*zip(*[(a, yi) for a, yi, l in zip(acc, y, long_) if l]), s=110, facecolor="none",
-                   edgecolor=col, lw=2.5, zorder=3)
-        ax.annotate(f"mean {sum(acc) / len(acc):.3f}   ·   {sum(a < 0.95 for a in acc)} below 0.95",
-                    (1, row), xycoords=("axes fraction", "data"), xytext=(14, 0), textcoords="offset points",
-                    va="center", color=TEXT2, fontsize=20)
-    ax.axvline(0.852, color=MUTED, lw=2, ls=(0, (4, 3)), zorder=1)
-    ax.annotate("4-bit checksum", (0.852, -0.62), ha="right", va="bottom", color=MUTED, fontsize=18,
-                xytext=(-6, 0), textcoords="offset points")
-    ax.scatter([], [], s=110, color=MUTED, lw=0, label="N ≤ 128")
-    ax.scatter([], [], s=110, facecolor="none", edgecolor=MUTED, lw=2.5, label="N = 256")
-    ax.legend(loc="upper left", bbox_to_anchor=(0.01, 0.97), ncol=2, handletextpad=0.3)
-    ax.set_yticks(range(len(versions)), [v[0] for v in versions])
-    ax.set_ylim(len(versions) - 0.5, -0.7)
-    ax.set_xlim(0, 1.02)
-    ax.grid(axis="y", visible=False)
-    ax.set_xlabel("test acc9 of the recognition model (one dot per configuration and seed)")
-    save(fig, "fix.pdf")
+def fig_fresh():
+    """Experiment 5: fresh seeds 3-5 (a), and 10 vs 20 epochs at N=256 (b); recognition-model test acc9."""
+    e5 = load("results/exp5/summary.json")
+    versions = [("baseline (BCE)", "base", RECOG_L), ("ranking loss", "C", RECOG)]
+    fig, (a, b) = plt.subplots(1, 2, figsize=(W, 4.1), width_ratios=[2.6, 1], layout="constrained")
+    for row, (label, key, col) in enumerate(versions):
+        runs = [(acc, cfg.endswith("N256")) for j, (cfg, d) in enumerate(e5["fresh"].items()) for acc in d[key]]
+        y = [row + ((j * 7) % 11 - 5) * 0.045 for j in range(len(runs))]
+        a.scatter([r for r, l in runs if not l], [yi for yi, (r, l) in zip(y, runs) if not l],
+                  s=110, color=col, alpha=0.85, lw=0, zorder=3)
+        a.scatter([r for r, l in runs if l], [yi for yi, (r, l) in zip(y, runs) if l],
+                  s=110, facecolor="none", edgecolor=col, lw=2.5, zorder=3)
+        short = [r for r, l in runs if not l]
+        a.annotate(f"N ≤ 128: {sum(r < 0.95 for r in short)} of {len(short)} below 0.95", (0.14, row - 0.4),
+                   color=TEXT2, fontsize=19, va="center")
+    a.axvline(1 / 9, color=MUTED, lw=2, ls=(0, (4, 3)), zorder=1)
+    a.set_yticks([0, 1], ["baseline", "ranking\nloss"])
+    a.set_ylim(1.55, -0.55)
+    a.set_xlim(0, 1.03)
+    a.grid(axis="y", visible=False)
+    a.set_xlabel("test acc9, one dot per run")
+    a.set_title("a  Fresh seeds 3–5, 14 configurations")
+    for i, (cfg, d) in enumerate(e5["long"].items()):
+        for j, (key, col) in enumerate([("base", RECOG_L), ("C", RECOG)]):
+            x0 = i + (j - 0.5) * 0.36
+            b.scatter([x0 - 0.07] * 3, d[key], s=110, color=col, lw=0, zorder=3)
+            b.scatter([x0 + 0.07] * 3, d[key + "L"], s=110, facecolor="none", edgecolor=col, lw=2.5, zorder=3)
+    b.axhline(1 / 9, color=MUTED, lw=2, ls=(0, (4, 3)), zorder=1)
+    b.set_xticks([0, 1], [c.replace("_N256", "").replace("x", "×") for c in e5["long"]])
+    b.set_xlim(-0.5, 1.5)
+    b.set_ylim(-0.04, 1.06)
+    b.grid(axis="x", visible=False)
+    b.set_xlabel("state")
+    b.set_title("b  N = 256: 10 vs 20 ep.")
+    save(fig, "fresh.pdf")
 
 if __name__ == "__main__":
     fig_curriculum()
     fig_sweep()
     fig_seeds()
-    fig_fix()
+    fig_fresh()
