@@ -352,7 +352,7 @@ Pairwise accuracy (true sequence above one corrupted copy) follows the same patt
 
 | state (d_k×d_v per layer) | reconstruct: exact copy ≥ 0.9 | recognise by surprise of the recall model: acc9 ≥ 0.99 | recognise with the recognition model: acc9 ≥ 0.99 |
 |---|---|---|---|
-| 16×4 | 32 | 64 | 128 (median run fails at N=16) |
+| 16×4 | 32 | 64 | 128 (median run fails at N=16); ≥256 counting experiment 5's fresh seeds |
 | 16×8 | 32 | 128 | ≥256 (median: 128, fails at N=64) |
 | 16×16 | 64 | ≥256 | ≥256 (median fails at N=64) |
 | 32×32 | 128 | ≥256 | ≥256 |
@@ -361,7 +361,7 @@ Pairwise accuracy (true sequence above one corrupted copy) follows the same patt
 
 - **At the three smallest states, recognition reaches 2–8 times the length of reconstruction.**
   - The recall model's own surprise recognises sequences 2–4 times as long as it can copy.
-  - The recognition model reaches 4–8 times, at least in its best run.
+  - The recognition model reaches 4–8 times, at least in its best run. At 16×4 the sweep runs reach only N=128, but one of experiment 5's fresh seeds (3–5, same training) passes at N=256 (0.999). Counting all 6 runs, 16×4 also reaches ≥256, or 8 times its copy length.
   - From 32×32 up, the test's longest length (256) hides the gap. Those states recognise every length tested.
 - **Reconstruction falls off sharply.** At 16×8, exact copy is 0.997 at N=32 and 0.014–0.146 at N=64. A lower bar of 0.5 changes only one row: 64×64 then reaches ≥256 (0.871).
 - **The recognition model's limits are less reliable than the others.** Its median run fails at some short lengths that its best run passes (the training failures of experiments 4–6). For it, the best run shows what the state can hold, not what one training run delivers.
@@ -589,7 +589,7 @@ Results are in `results/diag/`, summarised by [experiments/analyze_diag.py](../e
 
 1. **Checking is cheaper than generating, in theory and in these models.** The benchmark needs about 8 bits for recognition against 4N for recall. A trained GDN-2 state recognises at lengths where it recalls little or nothing.
 2. **A recall-trained memory read out by surprise is already a good recogniser, until it keeps less than about a third of the sequence.** Near that point, how well it recognises varies widely between seeds.
-3. **Below that, a memory trained to recognise is clearly better.** At 16×4 and N ≥ 128 its 6 runs average 0.984 and 0.882, against surprise's 0.593 and 0.445 (3 runs). This supports the hypothesis that recognition needs less capacity, in the regime where the hypothesis matters. On average it is level with a 4-bit checksum at N=256 (0.855 against 0.852) and above it at N=128 (0.987 against 0.851). Its best seed (0.978 at N=256) beats even the 8-bit checksum (0.965), so the 16×4 state can hold a better code than the model usually finds.
+3. **Below that, a memory trained to recognise is clearly better.** At 16×4 and N ≥ 128 its 6 runs average 0.984 and 0.882, against surprise's 0.593 and 0.445 (3 runs). This supports the hypothesis that recognition needs less capacity, in the regime where the hypothesis matters. On average it is above a 4-bit checksum at both lengths (0.882 against 0.852 at N=256, 0.984 against 0.851 at N=128). Its best run at N=256 (0.999, seed 5) beats even the 8-bit checksum (0.965), as do two others (0.978, 0.985). So the 16×4 state can hold a better code than the model usually finds; its worst run (0.741) is below the 4-bit checksum.
 4. **Recognition training is unreliable at the smallest states, and its outcomes are not reproducible.** The same code and seed can learn (0.871) or collapse (0.058), depending on non-deterministic GPU arithmetic. On fresh runs, the ranking loss lowers the failure rate up to N=128 somewhat (7 → 2 of 33 runs below 0.95, p = 0.07), not at N=256. Longer training with long-prefix-weighted stages makes N=256 worse. Experiment 6 shows what a failed run is: an order-aware comparison that settles at 80–90% precision during the curriculum and doesn't improve afterwards.
 5. **Next steps, in order of value:**
    - More runs per cell, not more fixes: at least 6–10 runs for both readouts at 16×4 and 16×8, N ≥ 64. That's the only way to measure failure rates when runs don't reproduce. The recall runs need it too; they have only 3 per cell.
