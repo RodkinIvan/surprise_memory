@@ -302,6 +302,42 @@ def fig_fix():
     save(fig, "fig8_fix.png")
 
 
+def fig_exp5():
+    e = json.loads((ROOT / "results/exp5/summary.json").read_text())
+    fig, (a, b) = plt.subplots(1, 2, figsize=(12, 4.2), width_ratios=[3.2, 1], layout="constrained")
+    cfgs = list(e["fresh"])
+    for j, (key, label, col) in enumerate([("base", "baseline", SERIES[1]), ("C", "ranking loss (C)", SERIES[0])]):
+        xs, ys = [], []
+        for i, c in enumerate(cfgs):
+            for v in e["fresh"][c][key]:
+                xs.append(i + (j - 0.5) * 0.3)
+                ys.append(v)
+        a.scatter(xs, ys, s=30, color=col, edgecolor=SURFACE, linewidth=1.2, label=label, zorder=3)
+    a.axvspan(10.5, 13.5, color=GRID, alpha=0.5, lw=0)
+    a.text(12, 0.03, "not selected", ha="center", color=TEXT2, fontsize=8.5)
+    chance(a)
+    a.set_xticks(range(len(cfgs)), [c.replace("_N", "\nN=") for c in cfgs])
+    a.grid(axis="x", visible=False)
+    a.set_ylim(-0.04, 1.06)
+    a.set_ylabel("test acc9, one dot per run")
+    a.set_title("a  Fresh seeds 3-5, 10 epochs")
+    a.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2, fontsize=8.5)
+    variants = [("base", "baseline, 10 ep", SERIES[1], True), ("baseL", "baseline, 20 ep", SERIES[1], False),
+                ("C", "ranking loss, 10 ep", SERIES[0], True), ("CL", "ranking loss, 20 ep", SERIES[0], False)]
+    for i, c in enumerate(e["long"]):
+        for j, (key, label, col, filled) in enumerate(variants):   # hollow: 20 epochs, length-weighted curriculum
+            b.scatter([i + (j - 1.5) * 0.17] * 3, e["long"][c][key], s=30, color=col if filled else SURFACE,
+                      edgecolor=col, linewidth=1.5, label=label if i == 0 else None, zorder=3)
+    chance(b, label="chance")
+    b.set_xticks(range(len(e["long"])), [c.replace("_N", "\nN=") for c in e["long"]])
+    b.set_xlim(-0.6, 1.6)
+    b.grid(axis="x", visible=False)
+    b.set_ylim(-0.04, 1.06)
+    b.set_title("b  Longer training at N=256")
+    b.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2, fontsize=8)
+    save(fig, "fig9_exp5.png")
+
+
 if __name__ == "__main__":
     fig_first_grid()
     fig_plateau()
@@ -311,3 +347,4 @@ if __name__ == "__main__":
     fig_bits()
     fig_seeds()
     fig_fix()
+    fig_exp5()
