@@ -1,4 +1,4 @@
-"""Poster-sized figures for posters/neurips_poster.tex, from results/{gdn2,sweep_smoke,sweep,fix}.
+"""Poster-sized figures for posters/neurips_poster.tex, from results/{gdn2,sweep_smoke,sweep,long,exp5}.
 
   conda run -n ai python posters/make_poster_figures.py   ->  posters/figures/*.pdf
 
@@ -163,6 +163,8 @@ STATES = [(16, 4), (16, 8), (16, 16), (32, 32), (64, 64), (128, 128)]
 
 def sweep(k, v, n, obj, seed=0):
     p = ROOT / f"results/sweep/k{k}v{v}_N{n}_{obj}_s{seed}.json"
+    if n >= 512:  # experiment 8; the recall model was not run this far at the two smallest states
+        p = ROOT / f"results/long/long_k{k}v{v}_N{n}_{obj}_s{seed}.json"
     return json.loads(p.read_text()) if p.exists() else None
 
 
@@ -193,7 +195,7 @@ def fig_sweep(lengths=(64, 128, 256)):
     save(fig, "sweep.pdf")
 
 
-def fig_seeds(lengths=(16, 32, 64, 128, 256)):
+def fig_seeds(lengths=(16, 32, 64, 128, 256, 512, 1024)):
     """3 seeds at the three smallest states: mean line, min-max band, one dot per seed."""
     fig, axes = plt.subplots(1, 3, figsize=(W, 4.7), sharey=True, layout="constrained")
     x = list(range(len(lengths)))
@@ -201,13 +203,15 @@ def fig_seeds(lengths=(16, 32, 64, 128, 256)):
         for obj, key, col, ls, label in [("lm", "recall_exact", MUTED, ":", "recall: exact copy"),
                                          ("lm", "recog_acc9", RECALL, "-", "recognition by surprise"),
                                          ("cls", "recog_acc9", RECOG, "-", "recognition model")]:
-            ys = [[sweep(k, v, n, obj, s)["test"][key] for s in range(3)] for n in lengths]
-            ax.fill_between(x, [min(y) for y in ys], [max(y) for y in ys], color=col, alpha=0.18, lw=0)
-            ax.plot(x, [sum(y) / 3 for y in ys], ls=ls, color=col, lw=3.5 if ls == "-" else 3, label=label)
-            for xi, y in zip(x, ys):
+            ran = [i for i, n in enumerate(lengths) if sweep(k, v, n, obj) is not None]
+            xs = [x[i] for i in ran]
+            ys = [[sweep(k, v, lengths[i], obj, s)["test"][key] for s in range(3)] for i in ran]
+            ax.fill_between(xs, [min(y) for y in ys], [max(y) for y in ys], color=col, alpha=0.18, lw=0)
+            ax.plot(xs, [sum(y) / 3 for y in ys], ls=ls, color=col, lw=3.5 if ls == "-" else 3, label=label)
+            for xi, y in zip(xs, ys):
                 ax.plot([xi] * 3, y, "o", ms=6, color=col, alpha=0.75, zorder=3)
         hline(ax, 1 / 9, "chance")
-        ax.set_xticks(x, [str(n) for n in lengths])
+        ax.set_xticks(x, [str(n) if n < 1000 else "1k" for n in lengths])
         ax.set_xlim(-0.25, len(x) - 0.75)
         ax.set_xlabel("sequence length N")
         ax.set_title(f"{k}×{v}")

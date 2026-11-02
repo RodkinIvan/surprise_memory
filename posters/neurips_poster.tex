@@ -1,5 +1,6 @@
 % NeurIPS poster: recall vs recognition memory in a small Gated DeltaNet-2.
-% Numbers: reports/recall_vs_recognition.md (experiments 1-4; results/{gdn2,sweep_smoke,sweep,fix}).
+% Numbers: reports/recall_vs_recognition.md (experiments 1-8; results/{gdn2,sweep_smoke,sweep,long,exp5}).
+% Longest-length table: experiment 8, results/sweep/capacity.json.
 % Build:  conda run -n ai python posters/make_poster_figures.py
 %         cd posters && latexmk -pdf neurips_poster.tex   (or pdflatex twice)
 \documentclass{article}
@@ -78,8 +79,8 @@
   {\fontsize{44}{52}\selectfont\bfseries Takeaway\par}\vspace{0.2in}
   A memory can tell whether an input is familiar long after it can no longer reproduce it.
   \begin{itemize}[label=\textcolor{white}{\textbullet}]
-    \item Shrinking a GDN-2 state, \textbf{exact recall fails first}: small states still recognise sequences
-          \textbf{2--8$\times$} longer than they can copy.
+    \item Shrinking a GDN-2 state, \textbf{exact recall fails first}: copying stops at $N{=}32$--$512$,
+          yet every state's best run recognises at $N{=}\mathbf{1{,}024}$.
     \item At $16{\times}4$, $N{=}256$ the memory \textbf{trained for recognition} is ahead:
           acc9 \textbf{0.88} [0.74--1.00] vs.\ \textbf{0.45} [0.27--0.63] for surprise (chance 0.11).
     \item Training it needs a \textbf{length curriculum}, and at small states it is \textbf{not reproducible}: the same seed can learn or collapse.
@@ -93,7 +94,7 @@
 \end{block}
 %----------------------------------------------------------------- benchmark
 \begin{block}{Benchmark: one sequence, eight near-copies}
-  Uniform i.i.d.\ tokens, vocabulary 16 (4 bits each), $N=4\ldots256$.
+  Uniform i.i.d.\ tokens, vocabulary 16 (4 bits each), $N=4\ldots1{,}024$ (Hub: up to 256).
   Each comes with \textbf{8 corrupted copies}: one forced change plus $p=\tfrac1{N-1}$ elsewhere, so \textbf{2 changes on average}.
 
   \vspace{0.2in}\centering
@@ -145,7 +146,7 @@
 %======================================================================= column 2
 \begin{minipage}[t]{15.3in}\vspace{0pt}
 \begin{block}{\textcolor{recall}{1}\enspace Full-size state: recall is easy, recognition needs a curriculum}
-  At $128{\times}128$ the \RC{recall model} copies every length almost perfectly (exact copy $0.988$ at $N{=}256$),
+  At $128{\times}128$, $N{\le}256$ the \RC{recall model} copies almost perfectly (exact copy $0.988$ at $N{=}256$),
   and its surprise ranks the true sequence first in \emph{every} test sample.
   The \RG{recognition model}, trained directly, fails from $N{=}64$ on: its loss sits at $\ln 2$ (a constant output) for all 35k steps.
   The same network learns recall in ${<}1{,}000$ steps, so this is an \textbf{optimisation} failure, not a capacity limit.
@@ -187,24 +188,25 @@
 %======================================================================= column 3
 \begin{minipage}[t]{15.3in}\vspace{0pt}
 \begin{block}[colframe=navy,boxrule=5pt]{\textcolor{navy}{3}\enspace Shrinking the state: recall goes first}
-  6 state sizes ($16{\times}4$ to $128{\times}128$) $\times$ 7 lengths $\times$ 2 objectives, 10 epochs each, tested on 100k sequences;
-  3 seeds at the three smallest states. Recognition model: BCE + length curriculum.
+  6 states ($16{\times}4$ to $128{\times}128$), lengths up to 1{,}024, 2 objectives, 10 epochs each;
+  3 seeds at the smallest three. Recognition model: BCE + length curriculum.
 
   \vspace{0.15in}
   \includegraphics[width=\linewidth]{seeds.pdf}
-  \figcap{Three smallest states, seeds 0--2, test acc9 and recall: mean (line), min--max (band), each seed (dots).}
+  \figcap{Three smallest states, seeds 0--2: mean (line), min--max (band), each seed (dots). Recall model not run past 256 at $16{\times}4$, $16{\times}8$. $N{\ge}512$: fresh corruptions in training.}
 
   \begin{itemize}
-    \item \textbf{Recognition outlasts recall.} Longest length that passes (powers of 2 tested): \\[0.1em]
+    \item \textbf{Recognition outlasts recall.} Longest length that passes: \\[0.1em]
           {\small\begin{tabular}{@{}lcccccc@{}}
             state & $16{\times}4$ & $16{\times}8$ & $16{\times}16$ & $32{\times}32$ & $64{\times}64$ & $128{\times}128$ \\ \midrule
-            exact copy ${\ge}0.9$ & 32 & 32 & 64 & 128 & 128 & ${\ge}256$ \\
-            \RC{surprise} acc9 ${\ge}0.99$ & 64 & 128 & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ \\
-            \RG{recognition}$^{*}$ acc9 ${\ge}0.99$ & \textbf{128} & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ & ${\ge}256$ \\
+            exact copy ${\ge}0.9$ & 32 & 32 & 64 & 128 & 128 & 512 \\
+            \RC{surprise} acc9 ${\ge}0.99$ & 64$^{\dagger}$ & 128$^{\dagger}$ & 1k+ & 1k+ & 1k+ & 1k+ \\
+            \RG{recognition} acc9 ${\ge}0.99$ & \textbf{1k+} & \textbf{1k+} & 512 & 256 & 1k+ & 1k+ \\
           \end{tabular}}\\[0.15em]
-          At the three smallest states recognition reaches \textbf{2--8$\times$} the copy length; from $32{\times}32$ up, $N{=}256$ hides the gap.
-          At $16{\times}16$, $N{=}256$ the recall model keeps ${\ge}536$ of 1{,}024 bits, copies nothing exactly, yet both readouts score ${\ge}0.996$.
-          {\color{ink2}$^{*}$Best of the 3 sweep runs (1 from $32{\times}32$ up); the median run fails at shorter lengths. Fresh seeds 3--5 take $16{\times}4$ to ${\ge}256$. Bar 0.99: an 8-bit checksum already scores 0.965.}
+          Every state has a run that recognises at $N{=}1{,}024$: at least \textbf{32$\times$} its copy length at the two smallest, $2\times$ at the largest.
+          {\color{ink2}Best of 3 runs (1 from $32{\times}32$ up); 1k+: passes at 1{,}024, the longest tested. $^{\dagger}$Not run past 256. Bar 0.99: an 8-bit checksum scores 0.965. Corruptions: ${\sim}$2 tokens at every length.}
+    \item \textbf{Strongest result, least reliable.} $16{\times}4$ passes at $N{=}1{,}024$ in 1 of 3 runs (0.99; others 0.82, 0.69) and in none at $N{=}512$;
+          its median run passes up to $N{=}128$, $4\times$ its copy length. These misses look like training, not capacity: $16{\times}8$ passes at $N{=}1{,}024$, $32{\times}32$ just misses (0.989).
     \item \textbf{Smallest state: the recognition model is ahead.} \\[0.1em]
           {\small\begin{tabular}{@{}lccc@{}}
             $16{\times}4$ & recall tokens & \RC{surprise}, 3 runs & \RG{recognition}, 6 runs \\ \midrule
@@ -212,7 +214,7 @@
             $N{=}256$ & 0.20 & 0.45 {\color{ink2}[0.27--0.63]} & \textbf{0.88} {\color{ink2}[0.74--1.00]} \\
           \end{tabular}}\\[0.15em]
           At $N{=}256$ its worst run (0.74) beats surprise's best (0.63). Few runs per cell, but large margins.
-    \item Near capacity, \RC{surprise} depends on what the memory chose to keep: 0.97, 0.73, 0.09 across seeds at $N{=}128$.
+    \item \RC{Surprise} depends more on what the memory keeps than on how much: at $16{\times}16$, $N{=}1{,}024$ a run keeping 9\% of the bits scores 0.997, one keeping 13\% scores 0.84.
     \item At $16{\times}8$ the two are about even ($N{=}256$: 0.94 vs.\ 0.98).
   \end{itemize}
 \end{block}
@@ -220,8 +222,8 @@
 \begin{block}{Next}
   \begin{itemize}
     \item \textbf{More runs per cell} (6--10, both readouts) to measure failure rates.
-    \item \textbf{Restarts}: train several starts for ${\sim}$5k steps, continue the lowest-loss one; needs testing, as the step-4k loss predicts the outcome only weakly ($\rho{=}{-}0.47$). Training changes so far (fixes, ranking loss, early small-edit negatives) don't remove the failures.
-    \item \textbf{Harder benchmarks} where checksums fail; $K$ stored sequences per context.
+    \item \textbf{Restarts}: train several starts for ${\sim}$5k steps, continue the lowest-loss one; needs testing, as the step-4k loss predicts the outcome only weakly ($\rho{=}{-}0.47$). Training changes tried so far don't remove the failures.
+    \item \textbf{Harder benchmarks} where checksums fail; $K$ sequences per context.
   \end{itemize}
   \vspace{0.1in}
   {\footnotesize\color{ink2} 3 seeds at $16{\times}4$--$16{\times}16$ for $N\ge16$ (6 recognition runs in the $16{\times}4$ table), seed 0 elsewhere. The three smallest states shrink $d_v$ only
