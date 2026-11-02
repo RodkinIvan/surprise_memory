@@ -20,7 +20,7 @@ import pyarrow.parquet as pq
 
 VOCAB = 16
 NUM_CORRUPTED = 8
-LENGTHS = [4, 8, 16, 32, 64, 128, 256]
+LENGTHS = [4, 8, 16, 32, 64, 128, 256, 512, 1024]
 SPLITS = {"train": 900_000, "validation": 50_000, "test": 100_000}
 SPLIT_IDS = {"train": 0, "validation": 1, "test": 2}
 BASE_SEED = 20261030
