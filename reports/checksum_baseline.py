@@ -28,9 +28,10 @@ def acc9(match):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--data", default="data")
+    p.add_argument("--lengths", type=int, nargs="+", default=[4, 8, 16, 32, 64, 128, 256])
     a = p.parse_args()
     print("| N | 4-bit checksum (sum mod 16) | 8-bit checksum (sum, weighted sum) mod 16 |\n|---|---|---|")
-    for n in [4, 8, 16, 32, 64, 128, 256]:
+    for n in a.lengths:
         cand = load(a.data, n)
         s1 = cand.sum(-1) % 16
         s2 = (cand * ((2 * np.arange(n) + 1) % 16)).sum(-1) % 16

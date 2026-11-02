@@ -1,0 +1,81 @@
+{
+ "args": {
+  "subset": "N1024_V16",
+  "objective": "cls",
+  "hidden": 128,
+  "layers": 2,
+  "heads": 1,
+  "head_dim": 128,
+  "expand_v": 1.0,
+  "epochs": 0.05,
+  "bs": 256,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "eval_every": 100,
+  "eval_samples": 10000,
+  "test_samples": 2000,
+  "cls_loss": "bce",
+  "cur_min": 16,
+  "cur_weight": "equal",
+  "curriculum": 0.5,
+  "hard_min": 0.0,
+  "train_neg": "fresh",
+  "diag_every": 0,
+  "save": null,
+  "seed": 0,
+  "data": "hf_data",
+  "out": "results/long_smoke/long_smoke_k128v128_N1024_cls.json"
+ },
+ "n_params": 729859,
+ "steps": 175,
+ "test": {
+  "recog_acc9": 0.0285,
+  "recog_pairwise": 0.498875,
+  "balanced_acc": 0.5003125
+ },
+ "curve": [
+  {
+   "step": 100,
+   "train_loss": 0.7021496856212616,
+   "train_acc": 0.4976953125,
+   "grad_norm": 0.4470892548561096,
+   "lr": 9.087284710337104e-05,
+   "time": 172.7099368572235,
+   "recog_acc9": 0.0258,
+   "recog_pairwise": 0.50456875,
+   "balanced_acc": 0.49984999999999996
+  },
+  {
+   "step": 175,
+   "train_loss": 0.695418365796407,
+   "train_acc": 0.49385416666666665,
+   "grad_norm": 0.4089943766593933,
+   "lr": 3.52e-05,
+   "time": 205.25236463546753,
+   "recog_acc9": 0.0236,
+   "recog_pairwise": 0.4971875,
+   "balanced_acc": 0.49999375
+  }
+ ],
+ "train_time": 217.20497035980225,
+ "host": "ws006599",
+ "gpu": "NVIDIA RTX 5880 Ada Generation",
+ "peak_gb": 14.051531314849854,
+ "code_version": {
+  "commit": "0ff972e8c6eba41531b8ce11b0fd8353bb4021a5",
+  "dirty": false,
+  "files_sha256": "014e95bb21f0296d9bd3279a37dd7ef9de436b3b4526098e03b661ac5605de96",
+  "paths": [
+   "benchmark/generate.py",
+   "experiments/train_gdn2.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-11-01 22:38:49",
+  "from_host": "Ivans-MacBook-Pro.local"
+ }
+}

@@ -55,6 +55,13 @@ def main():
                 out[f"{name}/{thr}/{k}x{v}"] = {"best": best[0], "best_monotone": best[1], "best_at_top": best[2],
                                                  "median": med[0], "median_monotone": med[1], "median_at_top": med[2], "runs": runs}
                 print(f"  {k:>3}x{v:<3} {fmt(*best):>6} / {fmt(*med):<6} ({runs} runs at N=64)")
+    print("\nruns passing / runs (best run) per length, at reconstruct >= 0.9 and acc9 >= 0.99")
+    for name, (obj, key, thrs) in CRITERIA.items():
+        for k, v in STATES:
+            cells = {n: values(k, v, n, obj, key) for n in LENGTHS}
+            passes = {n: sum(x >= thrs[0] for x in c) for n, c in cells.items() if c}
+            out[f"{name}/passes/{k}x{v}"] = {str(n): [passes[n], len(cells[n]), max(cells[n])] for n in passes}
+            print(f"  {name:<18} {k:>3}x{v:<3} " + "  ".join(f"N{n}:{passes[n]}/{len(cells[n])}({max(cells[n]):.3f})" for n in passes if n >= 64))
     Path("results/sweep/capacity.json").write_text(json.dumps(out, indent=1))
 
 
