@@ -83,7 +83,7 @@ def main():
     spec = jobs_file("hard", hard)
     spec["fetch"].append("ckpt/hard/{name}.pt")
     (here / "jobs_hard.json").write_text(json.dumps(spec, indent=1))
-    # longer sequences than the Hub has (generated on each host, same generator and seeds) where states still recall or
+    # longer sequences (generated on each host when these ran, on the Hub since) where states still recall or
     # recognise at N=256; fresh negatives after the curriculum, since the stored train copies would take 3.7-7.4 GB per job
     # mbz_nlp's GPUs were full of other users' jobs on 2026-11-01 22:50; N=1024 first, as those take longest
     long = [job(f"long_k{k}v{v}_N{n}_{obj}_s{seed}", n, k, v, obj, 10, " --train_neg fresh", seed=seed, hosts=["mbz_nlp2", "mbz_nlp2.07"])

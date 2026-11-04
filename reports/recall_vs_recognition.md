@@ -618,7 +618,7 @@ Results are in `results/diag/`, summarised by [experiments/analyze_diag.py](../e
   - The recall model from 16×16 up. Surprise at 16×4 and 16×8 was already below the bar at N=256, so those two weren't run further.
   - 3 seeds (0–2) at the three smallest states, 1 seed from 32×32 up, as in the sweep.
 - **Two differences from the sweep at the new lengths.**
-  - **Data.** The Hub dataset stops at N=256. Each host generated N=512 and 1,024 with the benchmark's generator and base seed, so a local check reproduces the same test sequences. These subsets are not on the Hub.
+  - **Data.** When these runs started, the Hub dataset stopped at N=256, so each host generated N=512 and 1,024 with the benchmark's generator and base seed. Those subsets passed `benchmark/test_dataset.py` and are now on the Hub (`N512_V16`, `N1024_V16`).
   - **Negatives.** After the curriculum, recognition training draws a new corruption by the same process (2.00 changed tokens on average, against 2.01 for the stored copies) instead of using the 8 stored ones, which would take 7.4 GB per job at N=1,024. Test negatives are the stored ones. Fresh negatives could make training somewhat easier, so comparisons across N=256 and N=512 for the recognition model are not exact.
 - **Where it ran.** Runs took 86–220 minutes on mbz_nlp2 and mbz_nlp2.07. Two N=1,024 runs ran out of GPU memory and were retried; hostq now keeps a running job's unused memory reserved for its whole run. All 36 finished.
 
