@@ -297,9 +297,11 @@ def host_kill(a) -> int:
 # ======================================================================================================== local side
 def load_route():
     import importlib.util
-    path = Path(os.environ.get("HOSTQ_ROUTE", "router/route.py")).resolve()
-    if not path.exists():
-        sys.exit(f"error: {path} not found (run from the project folder, or set HOSTQ_ROUTE to route.py)")
+    here = Path(__file__).resolve().parent
+    candidates = [Path(os.environ["HOSTQ_ROUTE"])] if "HOSTQ_ROUTE" in os.environ else [here / "route.py", Path("router/route.py")]
+    path = next((p.resolve() for p in candidates if p.exists()), None)
+    if path is None:
+        sys.exit(f"error: route.py not found in {', '.join(map(str, candidates))} (keep it next to hostq.py, or set HOSTQ_ROUTE)")
     spec = importlib.util.spec_from_file_location("route", path)
     mod = importlib.util.module_from_spec(spec)
     sys.modules["route"] = mod
