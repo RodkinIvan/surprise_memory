@@ -165,8 +165,8 @@
 
 \begin{block}{\textcolor{recog}{2}\enspace Small states: training is a coin flip}
   The same code and seed gave acc9 \textbf{0.871} in the sweep and \textbf{0.058} in a rerun on another GPU model
-  (kernels aren't bit-identical). Each small-state run is one draw from a two-humped distribution.
-  Tried: a \RG{ranking loss}, loss $=\mathrm{softplus}(s_\text{neg}-s_\text{true})$ on the same last-token score, curriculum from length 4.
+  (consistent with non-deterministic kernels). Outcomes are two-humped.
+  Tried: a \RG{ranking loss}, loss $=\mathrm{softplus}(s_\text{neg}{-}s_\text{true})$ on the same score, curriculum from length 4.
 
   \vspace{0.15in}
   \includegraphics[width=\linewidth]{fresh.pdf}
@@ -174,7 +174,7 @@
   (a) hollow: $N{=}256$. (b) filled: 10 epochs; hollow: 20, more curriculum time on long prefixes.}
   \begin{itemize}
     \item Up to $N{=}128$ the \RG{ranking loss} fails less (2 vs.\ 7 of 33 below 0.95; $p{=}0.07$, not significant) but also collapses (0.06);
-          at $N{=}256$ it is worse (0.92 vs.\ 0.96). 20 epochs hurt both (b).
+          at $N{=}256$ it is worse (0.92 vs.\ 0.96). No evidence 20 epochs help; possibly worse (b).
   \end{itemize}
   \textbf{What a failed run is} (28 instrumented reruns):
   \begin{itemize}
