@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """hostq: a job queue that lives on the GPU hosts, so running and queued jobs do not depend on this machine.
 
+This file is the source; the router repository carries a copy (hostq.py there, with paths relative to route.py).
+
 `submit` copies the code to the hosts (with router/route.py: same hosts file, jobs file and conda envs as the router), puts every job that is not on a
 host yet into one host's queue, and starts a worker there in a tmux session. The worker starts queued jobs when a GPU has room, records exit codes,
 retries failed jobs and exits after it has been idle for a while. Jobs run in their own process sessions, so they survive the worker, tmux and ssh.
