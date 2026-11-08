@@ -119,6 +119,28 @@ class HostSide(unittest.TestCase):
         self.wait_for(lambda j: j["a"]["state"] == "done")
         self.assertEqual(self.jobs()["a"]["attempt"], 1)
 
+    def test_kill_after_finish_keeps_the_record_and_a_pid_file_is_adopted(self):
+        jobs = self.proj / ".hostq" / "jobs"
+        run = self.proj / ".hostq" / "run"
+        jobs.mkdir(parents=True, exist_ok=True)
+        run.mkdir(parents=True, exist_ok=True)
+        (jobs / "done1.json").write_text(json.dumps({"state": "done", "exit": 0, "cmd": "true"}))
+        (jobs / "done1.kill").write_text("")
+        sleeper = subprocess.Popen(["sleep", "30"], start_new_session=True)
+        self.addCleanup(sleeper.kill)
+        boot = subprocess.run([sys.executable, "-c", f"import sys; sys.path.insert(0, {str(self.proj / '.hostq')!r}); import hostq; print(hostq.boot_id())"],
+                              capture_output=True, text=True).stdout.strip()
+        (jobs / "run1.json").write_text(json.dumps({"state": "running", "pid": None, "started_ts": time.time(), "boot_id": boot, "cmd": "sleep 30"}))
+        (run / "run1.pid").write_text(str(sleeper.pid))
+        w = subprocess.Popen([sys.executable, str(self.proj / ".hostq" / "hostq.py"), "worker", "--poll", "0.2", "--idle-exit", "60"],
+                             cwd=self.proj, stdout=self.out, stderr=self.out)
+        self.workers.append(w)
+        time.sleep(3)
+        done = json.loads((jobs / "done1.json").read_text())
+        self.assertEqual(done["state"], "done")
+        self.assertFalse((jobs / "done1.kill").exists())
+        running = json.loads((jobs / "run1.json").read_text())
+        self.assertEqual((running["state"], running["pid"]), ("running", sleeper.pid))
 
 class LocalState(unittest.TestCase):
     def test_stale_process_does_not_undo_a_resubmit(self):
@@ -193,6 +215,31 @@ class LocalState(unittest.TestCase):
         hostq.job_gpu_usage = lambda: None                        # nvidia-smi can't tell: fall back to the ramp rule
         w.place(jobs)
         self.assertEqual(started, [("new", [0])])
+
+    def test_submit_guard_sees_changed_files_only_where_jobs_wait(self):
+        import types
+        sys.path.insert(0, str(SRC.parent))
+        import hostq
+        src, dst = Path(tempfile.mkdtemp()), Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, src)
+        self.addCleanup(shutil.rmtree, dst)
+        for d in (src, dst):
+            (d / "code").mkdir()
+            (d / "code" / "same.py").write_text("x = 1\n")
+        (src / "code" / "train.py").write_text("lr = 2\n")
+        (dst / "code" / "train.py").write_text("lr = 1\n")       # what the queued jobs would run
+        (src / "code" / "new.py").write_text("y = 1\n")         # new files don't change a queued job
+        conn = types.SimpleNamespace(must=lambda script, what, timeout=0, stdin=None: subprocess.run(
+            ["bash", "-c", script], input=stdin, capture_output=True, text=True, check=True).stdout)
+        lo = hostq.Local.__new__(hostq.Local)
+        lo.spec = types.SimpleNamespace(sync=["code"], exclude=["__pycache__"])
+        lo.project_dir, lo.conn, lo.remote_dir = src, lambda name: conn, lambda name: str(dst)
+        h = types.SimpleNamespace(name="h1")
+        lo.host_cmd = lambda name, args, timeout=0: json.dumps({"jobs": {"a": {"state": "queued"}, "b": {"state": "done"}}})
+        self.assertEqual(lo.code_change_on_busy_host(h), (1, ["code/train.py"]))
+        self.assertEqual((dst / "code" / "train.py").read_text(), "lr = 1\n")     # nothing was copied
+        lo.host_cmd = lambda name, args, timeout=0: json.dumps({"jobs": {"b": {"state": "done"}}})
+        self.assertEqual(lo.code_change_on_busy_host(h), (0, []))
 
 
 if __name__ == "__main__":

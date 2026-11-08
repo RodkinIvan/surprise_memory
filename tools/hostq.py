@@ -141,7 +141,10 @@ class Worker:
     def handle_kills(self, jobs: dict) -> None:
         for key, j in jobs.items():
             marker = JOBS / f"{key}.kill"
-            if marker.exists():
+            if marker.exists() and j["state"] not in ("queued", "running"):     # finished before the kill arrived: keep its record
+                marker.unlink()
+                self.log(f"{key}: kill ignored, already {j['state']}")
+            elif marker.exists():
                 if j["state"] == "queued":
                     j.update(state="killed", finished=now(), note="killed while queued")
                 elif j["state"] == "running":
@@ -166,6 +169,16 @@ class Worker:
         for key, j in jobs.items():
             if j["state"] != "running":
                 continue
+            pid_file = RUN / f"{key}.pid"
+            if j.get("pid") is None:            # a worker stopped between recording the start and recording the pid
+                if pid_file.exists() and pid_file.read_text().strip().isdigit():
+                    j["pid"] = int(pid_file.read_text().strip())
+                    write_json(JOBS / f"{key}.json", j)
+                elif time.time() - j.get("started_ts", 0) > 60:
+                    self.finish(key, j, -1, "the worker stopped before the job started")
+                    continue
+                else:
+                    continue
             exit_file = RUN / f"{key}.exit"
             if exit_file.exists():
                 text = exit_file.read_text().strip()
@@ -179,16 +192,20 @@ class Worker:
         env = f"export HOSTQ_JOB={key} HOSTQ_GPU={g}\n" + (f"export CUDA_VISIBLE_DEVICES={g}\n" if gpus else "")
         path = f"export PATH={j['prefix']}/bin:$PATH\n" if j.get("prefix") else ""
         script = RUN / f"{key}.sh"
-        script.write_text(f"#!/bin/bash\ncd {shlex.quote(os.getcwd())}\n{path}{env}"
+        script.write_text(f"#!/bin/bash\necho $$ > {RUN}/{key}.pid\ncd {shlex.quote(os.getcwd())}\n{path}{env}"
                           f"( {j['cmd'].replace('{gpu}', g)} ) >> {LOGS}/{key}.log 2>&1\n"
                           f"echo $? > {RUN}/{key}.exit.tmp && mv {RUN}/{key}.exit.tmp {RUN}/{key}.exit\n")
         (RUN / f"{key}.exit").unlink(missing_ok=True)
+        (RUN / f"{key}.pid").unlink(missing_ok=True)
         attempt = j.get("attempt", 0) + 1
         with open(LOGS / f"{key}.log", "a") as f:
             f.write(f"===== hostq: attempt {attempt} on {socket.gethostname()} GPU {g or '-'} at {now()}\n")
+        # record the start before launching, so a worker that dies in between can't start the job a second time
+        j.update(state="running", pid=None, assigned=gpus, started=now(), started_ts=time.time(), boot_id=boot_id(), attempt=attempt)
+        write_json(JOBS / f"{key}.json", j)
         p = subprocess.Popen(["bash", str(script)], start_new_session=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         self.children[key] = p
-        j.update(state="running", pid=p.pid, assigned=gpus, started=now(), started_ts=time.time(), boot_id=boot_id(), attempt=attempt)
+        j["pid"] = p.pid
         write_json(JOBS / f"{key}.json", j)
         self.log(f"{key}: started attempt {attempt} on GPU {g or '-'} (pid {p.pid})")
 
@@ -373,6 +390,35 @@ class Local:
         with cf.ThreadPoolExecutor(8) as ex:
             return dict(zip(hosts, ex.map(one, hosts)))
 
+    def code_change_on_busy_host(self, h) -> tuple[int, list]:
+        """(queued + running jobs of this project on the host, files there that this sync would change). Jobs share the project
+        folder, so a sync while some are queued or running changes the code they run. Compares the sha256 of every synced file up
+        to 1 MB (code and configs) here and there; new files don't count."""
+        import fnmatch
+        import hashlib
+        try:
+            jobs = json.loads(self.host_cmd(h.name, "list", timeout=60))["jobs"]
+        except Exception:  # noqa: BLE001 - no worker there yet, or not reachable: prepare_host reports the latter
+            return 0, []
+        busy = sum(1 for j in jobs.values() if j["state"] in ("queued", "running"))
+        if not busy:
+            return 0, []
+        files = []
+        for p in self.spec.sync:
+            base = self.project_dir / p
+            files += [base] if base.is_file() else sorted(f for f in base.rglob("*") if f.is_file())
+        local = {}
+        for f in files:
+            rel = f.relative_to(self.project_dir)
+            if f.stat().st_size <= 1 << 20 and not any(fnmatch.fnmatch(part, pat) for part in rel.parts for pat in self.spec.exclude):
+                local[str(rel)] = hashlib.sha256(f.read_bytes()).hexdigest()
+        script = ("import hashlib, os, sys\nfor p in sys.stdin.read().split('\\0'):\n"
+                  "    if p and os.path.isfile(p): print(hashlib.sha256(open(p, 'rb').read()).hexdigest(), p)")
+        out = self.conn(h.name).must(f"cd {shlex.quote(self.remote_dir(h.name))} && python3 -c {shlex.quote(script)}",
+                                     "hash the code there", timeout=300, stdin="\0".join(local))
+        there = dict(reversed(line.split(" ", 1)) for line in out.splitlines() if " " in line)
+        return busy, sorted(r for r, sha in local.items() if r in there and there[r] != sha)
+
     def used_hosts(self) -> list:
         return sorted({s["host"] for s in self.state["jobs"].values() if s.get("host") in self.hosts})
 
@@ -397,6 +443,12 @@ class Local:
 
         def prep(h):
             try:
+                if not a.force:
+                    busy, changed = self.code_change_on_busy_host(h)
+                    if busy and changed:
+                        print(f"{h.name}: left out: {busy} queued or running job(s) of this project there would run changed code "
+                              f"({', '.join(changed[:4])}{' ...' if len(changed) > 4 else ''}); wait for them, or --force")
+                        return None
                 ctx = R.prepare_host(h, self.hosts_file, self.spec, self.project_dir, a, log=print)
                 ctx.conn.must(f"mkdir -p {ctx.project_dir}/.hostq && cat > {ctx.project_dir}/.hostq/hostq.py", "copy the worker",
                               stdin=Path(__file__).read_text())
@@ -556,6 +608,7 @@ def main(argv=None) -> int:
     ap.add_argument("--dry-run", action="store_true", help="submit: show which host would get which job")
     ap.add_argument("--resubmit", nargs="*", default=[], help="submit: queue these jobs again even if they were submitted before")
     ap.add_argument("--resubmit-failed", action="store_true", help="submit: queue the failed and killed jobs again")
+    ap.add_argument("--force", action="store_true", help="submit: sync even where queued or running jobs of the project would get changed code")
     ap.add_argument("--wait", action="store_true", help="fetch: keep fetching until every submitted job is finished")
     ap.add_argument("--all", action="store_true", help="fetch: fetch finished jobs again")
     ap.add_argument("--poll", type=float, default=None, help="seconds between polls (worker: 15, fetch --wait: 120)")

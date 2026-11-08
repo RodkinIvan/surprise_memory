@@ -5,18 +5,13 @@ Every variant (hard_min 0, 0.25, 0.5) has the same 12 fresh seeds per config. A 
 """
 
 import json
-from math import comb
 from pathlib import Path
+
+from stats import fisher_greater, fisher_less
 
 CONFIGS = [(16, 4, 16), (16, 4, 32)]
 VARIANTS = (0, 25, 50)
 SEEDS = range(200, 212)
-
-
-def fisher_less(a, n1, b, n2):
-    """One-sided Fisher exact test: P(failures in group 1 <= a) given a + b failures in n1 + n2 runs."""
-    k, n = a + b, n1 + n2
-    return sum(comb(n1, i) * comb(n2, k - i) for i in range(max(0, k - n2), a + 1)) / comb(n, k)
 
 
 def load(h, k, v, n):
@@ -50,16 +45,19 @@ def main():
             if h == 0:
                 base = (fails, len(acc))
             p = fisher_less(fails, len(acc), *base) if h and acc and base[1] else None
+            more = fisher_greater(fails, len(acc), *base) if h and acc and base[1] else None
+            out[cfg][f"hard{h}"]["p_more_vs_0"] = more
             print(f"  {cfg:<9} hard_min {h / 100:<4} {len(acc):>2} runs  fail {fails:>2}  mean {out[cfg][f'hard{h}']['mean'] or 0:.3f}"
-                  + (f"  p {p:.3f}" if p is not None else "")
+                  + (f"  p {p:.3f}  p(more) {more:.3f}" if p is not None else "")
                   + "  | " + " ".join(f"{a:.3f}" for a in sorted(acc)))
     print("\n  both configs:")
     out["total"] = {}
     for h in VARIANTS:
         f, m = totals[h]
         p = fisher_less(f, m, *totals[0]) if h and m else None
-        out["total"][f"hard{h}"] = {"fails": f, "n": m, "p_vs_0": p}
-        print(f"  hard_min {h / 100:<4} fail {f}/{m}" + (f"  p {p:.3f}" if p is not None else ""))
+        more = fisher_greater(f, m, *totals[0]) if h and m else None
+        out["total"][f"hard{h}"] = {"fails": f, "n": m, "p_vs_0": p, "p_more_vs_0": more}
+        print(f"  hard_min {h / 100:<4} fail {f}/{m}" + (f"  p {p:.3f}  p(more failures) {more:.3f}" if p is not None else ""))
     Path("results/hard/summary.json").write_text(json.dumps(out, indent=1))
 
 

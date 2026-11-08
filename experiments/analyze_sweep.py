@@ -14,6 +14,8 @@ KEEP = ["recog_acc9", "recog_pairwise", "recall_token_acc", "recall_exact", "nll
 
 def row(path):
     r = json.loads(path.read_text())
+    if "args" not in r:     # an aggregate such as summary.json or capacity.json, not a run
+        return None
     a = r["args"]
     k = a["head_dim"] or a["hidden"] // a["heads"]
     v = round(k * a.get("expand_v", 1.0))
@@ -37,8 +39,7 @@ def main():
     p.add_argument("--dir", default="sweep")
     a = p.parse_args()
     d = Path("results") / a.dir
-    rows = sorted((row(f) for f in d.glob("*.json") if f.name != "summary.json"),
-                  key=lambda r: (r["state"], r["N"], r["objective"], r["seed"]))
+    rows = sorted(filter(None, (row(f) for f in d.glob("*.json"))), key=lambda r: (r["state"], r["N"], r["objective"], r["seed"]))
     (d / "summary.json").write_text(json.dumps(rows, indent=1))
     print(f"{'state':>9} {'N':>4} {'obj':>4} {'acc9':>7} {'pair':>7} {'exact':>7} {'tok':>7} {'note'}")
     for r in rows:

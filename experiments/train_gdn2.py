@@ -9,7 +9,7 @@ Both are evaluated on choosing the true sequence among it and its 8 corrupted co
 """
 
 import argparse
-import fcntl
+import hashlib
 import json
 import math
 import os
@@ -31,7 +31,7 @@ VOCAB = 16
 SEP, BOS = VOCAB, VOCAB + 1
 REPO = "irodkin/recognition-memory"
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "benchmark"))
-import generate as bench  # noqa: E402  (the benchmark generator: lengths on the Hub, and the subsets it lacks)
+import generate as bench  # noqa: E402  (the benchmark generator: the lengths on the Hub)
 
 
 class Block(nn.Module):
@@ -67,19 +67,23 @@ class Model(nn.Module):
 # ---------------------------------------------------------------- data
 
 def fetch_subset(data, subset):
-    """Download a subset from the Hub; a length the Hub lacks is generated here, with the benchmark's generator and seeds."""
-    n = int(subset.split("_")[0][1:])
-    if n in bench.LENGTHS:
-        return Path(snapshot_download(REPO, repo_type="dataset", local_dir=data, allow_patterns=[f"{subset}/*"]))
-    root = Path(data)
-    root.mkdir(parents=True, exist_ok=True)
-    with open(root / f".{subset}.lock", "w") as lock:  # jobs on one host generate it once
-        fcntl.flock(lock, fcntl.LOCK_EX)
-        if not (root / subset / ".complete").exists():
-            for split in bench.SPLITS:
-                bench.write_split(root, n, split)
-            (root / subset / ".complete").touch()
-    return root
+    """Download a subset from the Hub (experiment 8 generated N=512 and 1,024 on the hosts before they were pushed)."""
+    if int(subset.split("_")[0][1:]) not in bench.LENGTHS:
+        raise SystemExit(f"{subset} is not on the Hub; lengths there: {bench.LENGTHS}")
+    return Path(snapshot_download(REPO, repo_type="dataset", local_dir=data, allow_patterns=[f"{subset}/*"]))
+
+
+def provenance():
+    """The code this run starts with: CODE_VERSION.json from the last sync, hashes of the files actually loaded, and versions.
+
+    Read at start-up: a later sync to the same folder (queued jobs share it) must not relabel a running job."""
+    import fla
+    import triton
+    version = json.loads(Path("CODE_VERSION.json").read_text()) if Path("CODE_VERSION.json").exists() else None
+    files = {Path(f).name: hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in (__file__, bench.__file__)}
+    return {"code_version": version, "files_sha256": files,
+            "versions": {"torch": torch.__version__, "fla": fla.__version__, "triton": triton.__version__,
+                         "cuda": torch.version.cuda, "python": sys.version.split()[0]}}
 
 
 def load_split(root, subset, split, corrupted=True):
@@ -303,7 +307,7 @@ def main():
     p.add_argument("--cur_weight", choices=["equal", "length"], default="equal",
                    help="cls: time per curriculum stage: equal, or proportional to the prefix length")
     p.add_argument("--curriculum", type=float, default=0.0,
-                   help="cls: fraction of training spent on a curriculum: prefixes of length cur_min, 2*cur_min, ... N (equal time each)"
+                   help="cls: fraction of training spent on a curriculum: prefixes of length cur_min, 2*cur_min, ... N (time per stage: --cur_weight)"
                         " with negatives corrupted on the fly, the heavily corrupted share decaying 1 -> 0")
     p.add_argument("--hard_min", type=float, default=0.0,
                    help="cls: share of the curriculum's negatives that are benchmark-like (1-2 changed tokens) from the first step;"
@@ -322,6 +326,7 @@ def main():
     if not 0 <= a.hard_min <= 1:
         p.error(f"--hard_min must be in [0, 1], got {a.hard_min}")
 
+    prov = provenance()
     torch.manual_seed(a.seed)
     dev = torch.device("cuda")
     root = fetch_subset(a.data, a.subset)
@@ -397,10 +402,9 @@ def main():
     if a.save:
         Path(a.save).parent.mkdir(parents=True, exist_ok=True)
         torch.save(model.state_dict(), a.save)
-    version = json.loads(Path("CODE_VERSION.json").read_text()) if Path("CODE_VERSION.json").exists() else None
     out = {"args": vars(a), "n_params": n_params, "steps": steps, "test": test, "curve": curve,
            "train_time": time.time() - t0, "host": socket.gethostname(),
-           "gpu": torch.cuda.get_device_name(), "peak_gb": torch.cuda.max_memory_allocated() / 2**30, "code_version": version}
+           "gpu": torch.cuda.get_device_name(), "peak_gb": torch.cuda.max_memory_allocated() / 2**30, **prov}
     if a.diag_every:
         out.update(diag=diag, profiles=profiles)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)

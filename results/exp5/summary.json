@@ -316,5 +316,10 @@
    "below_0.85": 2,
    "at_0.99": 5
   }
+ },
+ "tests": {
+  "C_fewer_failures/N<=128": 0.07436039925620365,
+  "C_fewer_failures/all 14": 0.11341576931388928,
+  "20_epochs_more_failures": 0.09651366267330731
  }
 }
