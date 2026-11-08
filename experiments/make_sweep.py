@@ -132,7 +132,7 @@ def main():
     # staged curriculum over N; recall stops after the first stage below 0.5 exact copy. The data is synced with the code.
     keyed_sync = ["experiments/train_gdn2.py", "experiments/train_keyed.py", "benchmark/generate.py", "benchmark/generate_keyed.py", "data_keyed"]
     def keyed_job(name, k, obj, seed, extra=""):
-        return {"name": name, "gpus": 1, "gb": 8, "retries": 1, "hosts": hosts4,
+        return {"name": name, "gpus": 1, "gb": 14, "retries": 1, "hosts": hosts4,
                 "cmd": f"{PY} experiments/train_keyed.py --objective {obj} --k {k} --v {k} --seed {seed}{extra} --out results/keyed/{name}.json",
                 "expect": [f"results/keyed/{name}.json"]}
     keyed = [keyed_job(f"keyed_k{k}_{obj}_s{seed}", k, obj, seed) for k in (4, 8, 16, 32) for obj in ("lm", "cls") for seed in (0, 1, 2)]

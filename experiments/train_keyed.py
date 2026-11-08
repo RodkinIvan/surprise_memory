@@ -156,10 +156,10 @@ def evaluate(model, objective, data, bs, dev):
     """acc9 (ties share the win), pairwise accuracy for edits, other keys and fresh sequences, and, for lm, exact copy and
     token accuracy."""
     model.eval()
-    tot, n = {}, 0
+    tot, count = {}, 0
     for i in range(0, len(data["query"]), bs):
         keys, seqs, query, cand = (data[c][i:i + bs].to(dev) for c in ("keys", "sequences", "query", "candidates"))
-        b, n, length = seqs.shape
+        b, n_pairs, length = seqs.shape
         rows = torch.arange(b, device=dev)
         true = seqs[rows, query]
         cands = torch.cat([true[:, None], cand], 1)                                      # [B, 9, L], true first
@@ -175,7 +175,7 @@ def evaluate(model, objective, data, bs, dev):
                 m = {}
         top = score == score.max(1, keepdim=True).values
         win = (score[:, :1] > score[:, 1:]).float() + 0.5 * (score[:, :1] == score[:, 1:]).float()
-        e, o = kb.N_EDIT, kb.N_EDIT + kb.n_other(n)
+        e, o = kb.N_EDIT, kb.N_EDIT + kb.n_other(n_pairs)
         m.update(recog_acc9=top[:, 0].float() / top.sum(1), pairwise_edit=win[:, :e].mean(1))
         if o > e:
             m["pairwise_other"] = win[:, e:o].mean(1)
@@ -183,9 +183,9 @@ def evaluate(model, objective, data, bs, dev):
             m["pairwise_fresh"] = win[:, o:].mean(1)
         for k, v in m.items():
             tot[k] = tot.get(k, 0.0) + v.sum().item()
-        n += b
+        count += b
     model.train()
-    return {k: v / n for k, v in tot.items()}
+    return {k: v / count for k, v in tot.items()}
 
 
 def main():

@@ -14,7 +14,7 @@
   {
    "name": "keyed_smoke_k4_lm",
    "gpus": 1,
-   "gb": 8,
+   "gb": 14,
    "retries": 1,
    "hosts": [
     "mbz_nlp",
@@ -30,7 +30,7 @@
   {
    "name": "keyed_smoke_k4_cls",
    "gpus": 1,
-   "gb": 8,
+   "gb": 14,
    "retries": 1,
    "hosts": [
     "mbz_nlp",
@@ -46,7 +46,7 @@
   {
    "name": "keyed_smoke_k32_lm",
    "gpus": 1,
-   "gb": 8,
+   "gb": 14,
    "retries": 1,
    "hosts": [
     "mbz_nlp",
@@ -62,7 +62,7 @@
   {
    "name": "keyed_smoke_k32_cls",
    "gpus": 1,
-   "gb": 8,
+   "gb": 14,
    "retries": 1,
    "hosts": [
     "mbz_nlp",
