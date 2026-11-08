@@ -128,15 +128,15 @@ def main():
     epochs = [named(f"e20eq_{name}", 256, k, v, "cls", 20, flags, seed) for name, flags in (("base", ""), ("C", FIXES["C"]))
               for k, v in [(16, 4), (16, 8)] for seed in FRESH_SEEDS]
     (here / "jobs_epochs.json").write_text(json.dumps(jobs_file("epochs", epochs), indent=1))
-    # experiment 9: keyed recall vs recognition (8 sequences of length L = 1..1024), d_model 32, 2 layers, square states 4..32,
-    # staged length curriculum; recall stops after the first stage below 0.5 exact copy. The data is synced with the code.
+    # experiment 9: keyed recall vs recognition (N = 1..1024 sequences of length 8), d_model 32, 2 layers, square states 4..32,
+    # staged curriculum over N; recall stops after the first stage below 0.5 exact copy. The data is synced with the code.
     keyed_sync = ["experiments/train_gdn2.py", "experiments/train_keyed.py", "benchmark/generate.py", "benchmark/generate_keyed.py", "data_keyed"]
     def keyed_job(name, k, obj, seed, extra=""):
         return {"name": name, "gpus": 1, "gb": 8, "retries": 1, "hosts": hosts4,
                 "cmd": f"{PY} experiments/train_keyed.py --objective {obj} --k {k} --v {k} --seed {seed}{extra} --out results/keyed/{name}.json",
                 "expect": [f"results/keyed/{name}.json"]}
     keyed = [keyed_job(f"keyed_k{k}_{obj}_s{seed}", k, obj, seed) for k in (4, 8, 16, 32) for obj in ("lm", "cls") for seed in (0, 1, 2)]
-    keyed_smoke = [keyed_job(f"keyed_smoke_k{k}_{obj}", k, obj, 0, " --lengths 1 4 1024 --stage_steps 60 --test_samples 300")
+    keyed_smoke = [keyed_job(f"keyed_smoke_k{k}_{obj}", k, obj, 0, " --counts 1 4 1024 --stage_steps 60 --test_samples 300")
                    for k in (4, 32) for obj in ("lm", "cls")]
     for name, js in (("keyed", keyed), ("keyed_smoke", keyed_smoke)):
         spec = {"project": "surprise_memory", "sync": keyed_sync, "fetch": ["results/keyed/{name}.json"], "jobs": js}

@@ -1,6 +1,6 @@
 """Recognition with a few bits per key on the keyed benchmark: acc9 and pairwise accuracy of checksum memories.
 
-A memory that keeps one checksum per key accepts a candidate whose checksum matches the queried key's. Edits change 1-2
+N pairs of length 8, N = 1..1024. A memory that keeps one checksum per key (N x bits in all) accepts a candidate whose checksum matches the queried key's. Edits change 1-2
 tokens, so the sum mod 16 (4 bits) catches every single change; adding a position-weighted sum (8 bits) catches most double
 changes. A sequence stored under another key collides with probability about 2^-bits. Keeping the 8 checksums without their
 keys (a set) can't reject other-key negatives at all, since those sequences were stored too. Ties share the win.
@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "benchmark"))
-from generate_keyed import LENGTHS, N_EDIT, subset_name  # noqa: E402
+from generate_keyed import COUNTS, N_EDIT, n_other, subset_name  # noqa: E402
 from test_keyed import load  # noqa: E402
 
 
@@ -40,22 +40,24 @@ def scores(seqs, query, cand, words, keyed=True):
         match = (sig[:, :, None, :] == stored[:, None, :, :]).all(-1).any(-1)
     acc9 = (match[:, 0] / match.sum(1)).mean()
     win = np.where(match[:, 1:], 0.5, 1.0)                                # the true one always matches
-    return acc9, win[:, :N_EDIT].mean(), win[:, N_EDIT:].mean()
+    o = N_EDIT + n_other(seqs.shape[1])
+    return acc9, win[:, :N_EDIT].mean(), win[:, N_EDIT:o].mean() if o > N_EDIT else float("nan")
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--data", default="data_keyed")
-    p.add_argument("--lengths", type=int, nargs="+", default=LENGTHS)
+    p.add_argument("--counts", type=int, nargs="+", default=COUNTS)
     a = p.parse_args()
-    print("| L | per key, 4 bits (32 total) | per key, 8 bits (64) | per key, 12 bits (96) | per key, 16 bits (128) | 8 bits, keys not kept (set of 8) |")
+    print("| N | 4 bits per key | 8 bits per key | 12 bits per key | 16 bits per key | 8 bits per sequence, keys not kept |")
     print("|---|---|---|---|---|---|")
-    for length in a.lengths:
-        x = load(Path(a.data) / subset_name(length), "test", length)
+    for n in a.counts:
+        x = load(Path(a.data) / subset_name(n), "test", n)
         cells = [scores(x["sequences"], x["query"], x["candidates"], w) for w in (1, 2, 3, 4)]
         cells.append(scores(x["sequences"], x["query"], x["candidates"], 2, keyed=False))
-        print(f"| {length} | " + " | ".join(f"{c[0]:.3f} ({c[1]:.3f} / {c[2]:.3f})" for c in cells) + " |", flush=True)
-    print("\nacc9 (pairwise on edits / on other keys)")
+        print(f"| {n} | " + " | ".join(f"{c[0]:.3f} ({c[1]:.3f} / {c[2]:.3f})" for c in cells) + " |", flush=True)
+    print("\nacc9 (pairwise on edits / on other keys); total bits = N x bits per key. Fresh negatives (N < 5) differ in about"
+          "\n7.5 of 8 tokens, so any checksum rejects them with probability 1 - 2^-bits.")
 
 
 if __name__ == "__main__":
