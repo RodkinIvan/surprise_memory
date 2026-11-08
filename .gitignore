@@ -27,3 +27,4 @@ logs_router_gdn2.txt
 
 # model weights
 /ckpt/
+/data_keyed/

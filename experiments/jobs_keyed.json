@@ -1,0 +1,399 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py",
+  "experiments/train_keyed.py",
+  "benchmark/generate.py",
+  "benchmark/generate_keyed.py",
+  "data_keyed"
+ ],
+ "fetch": [
+  "results/keyed/{name}.json"
+ ],
+ "jobs": [
+  {
+   "name": "keyed_k4_lm_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 4 --v 4 --seed 0 --out results/keyed/keyed_k4_lm_s0.json",
+   "expect": [
+    "results/keyed/keyed_k4_lm_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k4_lm_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 4 --v 4 --seed 1 --out results/keyed/keyed_k4_lm_s1.json",
+   "expect": [
+    "results/keyed/keyed_k4_lm_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k4_lm_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 4 --v 4 --seed 2 --out results/keyed/keyed_k4_lm_s2.json",
+   "expect": [
+    "results/keyed/keyed_k4_lm_s2.json"
+   ]
+  },
+  {
+   "name": "keyed_k4_cls_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 4 --v 4 --seed 0 --out results/keyed/keyed_k4_cls_s0.json",
+   "expect": [
+    "results/keyed/keyed_k4_cls_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k4_cls_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 4 --v 4 --seed 1 --out results/keyed/keyed_k4_cls_s1.json",
+   "expect": [
+    "results/keyed/keyed_k4_cls_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k4_cls_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 4 --v 4 --seed 2 --out results/keyed/keyed_k4_cls_s2.json",
+   "expect": [
+    "results/keyed/keyed_k4_cls_s2.json"
+   ]
+  },
+  {
+   "name": "keyed_k8_lm_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 8 --v 8 --seed 0 --out results/keyed/keyed_k8_lm_s0.json",
+   "expect": [
+    "results/keyed/keyed_k8_lm_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k8_lm_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 8 --v 8 --seed 1 --out results/keyed/keyed_k8_lm_s1.json",
+   "expect": [
+    "results/keyed/keyed_k8_lm_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k8_lm_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 8 --v 8 --seed 2 --out results/keyed/keyed_k8_lm_s2.json",
+   "expect": [
+    "results/keyed/keyed_k8_lm_s2.json"
+   ]
+  },
+  {
+   "name": "keyed_k8_cls_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 8 --v 8 --seed 0 --out results/keyed/keyed_k8_cls_s0.json",
+   "expect": [
+    "results/keyed/keyed_k8_cls_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k8_cls_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 8 --v 8 --seed 1 --out results/keyed/keyed_k8_cls_s1.json",
+   "expect": [
+    "results/keyed/keyed_k8_cls_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k8_cls_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 8 --v 8 --seed 2 --out results/keyed/keyed_k8_cls_s2.json",
+   "expect": [
+    "results/keyed/keyed_k8_cls_s2.json"
+   ]
+  },
+  {
+   "name": "keyed_k16_lm_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 16 --v 16 --seed 0 --out results/keyed/keyed_k16_lm_s0.json",
+   "expect": [
+    "results/keyed/keyed_k16_lm_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k16_lm_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 16 --v 16 --seed 1 --out results/keyed/keyed_k16_lm_s1.json",
+   "expect": [
+    "results/keyed/keyed_k16_lm_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k16_lm_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 16 --v 16 --seed 2 --out results/keyed/keyed_k16_lm_s2.json",
+   "expect": [
+    "results/keyed/keyed_k16_lm_s2.json"
+   ]
+  },
+  {
+   "name": "keyed_k16_cls_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 16 --v 16 --seed 0 --out results/keyed/keyed_k16_cls_s0.json",
+   "expect": [
+    "results/keyed/keyed_k16_cls_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k16_cls_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 16 --v 16 --seed 1 --out results/keyed/keyed_k16_cls_s1.json",
+   "expect": [
+    "results/keyed/keyed_k16_cls_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k16_cls_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 16 --v 16 --seed 2 --out results/keyed/keyed_k16_cls_s2.json",
+   "expect": [
+    "results/keyed/keyed_k16_cls_s2.json"
+   ]
+  },
+  {
+   "name": "keyed_k32_lm_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 32 --v 32 --seed 0 --out results/keyed/keyed_k32_lm_s0.json",
+   "expect": [
+    "results/keyed/keyed_k32_lm_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k32_lm_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 32 --v 32 --seed 1 --out results/keyed/keyed_k32_lm_s1.json",
+   "expect": [
+    "results/keyed/keyed_k32_lm_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k32_lm_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 32 --v 32 --seed 2 --out results/keyed/keyed_k32_lm_s2.json",
+   "expect": [
+    "results/keyed/keyed_k32_lm_s2.json"
+   ]
+  },
+  {
+   "name": "keyed_k32_cls_s0",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 32 --v 32 --seed 0 --out results/keyed/keyed_k32_cls_s0.json",
+   "expect": [
+    "results/keyed/keyed_k32_cls_s0.json"
+   ]
+  },
+  {
+   "name": "keyed_k32_cls_s1",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 32 --v 32 --seed 1 --out results/keyed/keyed_k32_cls_s1.json",
+   "expect": [
+    "results/keyed/keyed_k32_cls_s1.json"
+   ]
+  },
+  {
+   "name": "keyed_k32_cls_s2",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp",
+    "mbz_nlp2",
+    "mbz_nlp2.07",
+    "mbz_nlp3"
+   ],
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 32 --v 32 --seed 2 --out results/keyed/keyed_k32_cls_s2.json",
+   "expect": [
+    "results/keyed/keyed_k32_cls_s2.json"
+   ]
+  }
+ ]
+}

@@ -1,6 +1,6 @@
 """Write the jobs files of the state-size sweep: recall (lm) vs recognition (cls) memory.
 
-  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke,probe,hard,long,long_smoke,curr,repro2,bridge,epochs}.json
+  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke,probe,hard,long,long_smoke,curr,repro2,bridge,epochs,keyed,keyed_smoke}.json
 Submit with:  python3 tools/hostq.py submit experiments/jobs_sweep.json
 """
 
@@ -128,6 +128,19 @@ def main():
     epochs = [named(f"e20eq_{name}", 256, k, v, "cls", 20, flags, seed) for name, flags in (("base", ""), ("C", FIXES["C"]))
               for k, v in [(16, 4), (16, 8)] for seed in FRESH_SEEDS]
     (here / "jobs_epochs.json").write_text(json.dumps(jobs_file("epochs", epochs), indent=1))
+    # experiment 9: keyed recall vs recognition (8 sequences of length L = 1..1024), d_model 32, 2 layers, square states 4..32,
+    # staged length curriculum; recall stops after the first stage below 0.5 exact copy. The data is synced with the code.
+    keyed_sync = ["experiments/train_gdn2.py", "experiments/train_keyed.py", "benchmark/generate.py", "benchmark/generate_keyed.py", "data_keyed"]
+    def keyed_job(name, k, obj, seed, extra=""):
+        return {"name": name, "gpus": 1, "gb": 8, "retries": 1, "hosts": hosts4,
+                "cmd": f"{PY} experiments/train_keyed.py --objective {obj} --k {k} --v {k} --seed {seed}{extra} --out results/keyed/{name}.json",
+                "expect": [f"results/keyed/{name}.json"]}
+    keyed = [keyed_job(f"keyed_k{k}_{obj}_s{seed}", k, obj, seed) for k in (4, 8, 16, 32) for obj in ("lm", "cls") for seed in (0, 1, 2)]
+    keyed_smoke = [keyed_job(f"keyed_smoke_k{k}_{obj}", k, obj, 0, " --lengths 1 4 1024 --stage_steps 60 --test_samples 300")
+                   for k in (4, 32) for obj in ("lm", "cls")]
+    for name, js in (("keyed", keyed), ("keyed_smoke", keyed_smoke)):
+        spec = {"project": "surprise_memory", "sync": keyed_sync, "fetch": ["results/keyed/{name}.json"], "jobs": js}
+        (here / f"jobs_{name}.json").write_text(json.dumps(spec, indent=1))
     # probe the saved models with swap / shuffle / sum-preserving negatives, on one host that gets all of them
     probe = {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py", "benchmark/generate.py", "experiments/probe_ckpt.py", "results/diag", "ckpt/diag"],
              "fetch": ["results/diag/probe.json"],
@@ -135,7 +148,7 @@ def main():
                        "gpus": 1, "gb": 8, "retries": 1, "hosts": ["mbz_nlp2"], "expect": ["results/diag/probe.json"]}]}
     (here / "jobs_probe.json").write_text(json.dumps(probe, indent=1))
     (here / "jobs_sweep_smoke.json").write_text(json.dumps(jobs_file("sweep_smoke", smoke), indent=1))
-    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs, {len(hard)} hard jobs, {len(long)} long jobs, {len(curr)} curriculum, {len(repro)} repro, {len(bridge)} bridge, {len(epochs)} epoch jobs")
+    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs, {len(hard)} hard jobs, {len(long)} long jobs, {len(curr)} curriculum, {len(repro)} repro, {len(bridge)} bridge, {len(epochs)} epoch, {len(keyed)} keyed jobs")
 
 
 if __name__ == "__main__":

@@ -73,15 +73,16 @@ def fetch_subset(data, subset):
     return Path(snapshot_download(REPO, repo_type="dataset", local_dir=data, allow_patterns=[f"{subset}/*"]))
 
 
-def provenance():
-    """The code this run starts with: CODE_VERSION.json from the last sync, hashes of the files actually loaded, and versions.
+def provenance(files=()):
+    """The code this run starts with: CODE_VERSION.json from the last sync, hashes of the files actually loaded (this one, the
+    benchmark generator and `files`), and versions.
 
     Read at start-up: a later sync to the same folder (queued jobs share it) must not relabel a running job."""
     import fla
     import triton
     version = json.loads(Path("CODE_VERSION.json").read_text()) if Path("CODE_VERSION.json").exists() else None
-    files = {Path(f).name: hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in (__file__, bench.__file__)}
-    return {"code_version": version, "files_sha256": files,
+    hashes = {Path(f).name: hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in (__file__, bench.__file__, *files)}
+    return {"code_version": version, "files_sha256": hashes,
             "versions": {"torch": torch.__version__, "fla": fla.__version__, "triton": triton.__version__,
                          "cuda": torch.version.cuda, "python": sys.version.split()[0]}}
 
