@@ -1,6 +1,6 @@
 """Write the jobs files of the state-size sweep: recall (lm) vs recognition (cls) memory.
 
-  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke,probe,hard,long,long_smoke}.json
+  python3 experiments/make_sweep.py   ->  experiments/jobs_{sweep,sweep_smoke,seeds,fix,exp5,diag,diag_smoke,probe,hard,long,long_smoke,curr,repro2,bridge,epochs}.json
 Submit with:  python3 tools/hostq.py submit experiments/jobs_sweep.json
 """
 
@@ -97,6 +97,37 @@ def main():
     for j in long_smoke:
         j["gb"] = 24
     (here / "jobs_long_smoke.json").write_text(json.dumps(jobs_file("long_smoke", long_smoke), indent=1))
+    # review follow-ups (REVIEW.md 2026-11-08); every file is synced from one commit, so all runs record the same code
+    hosts4 = ["mbz_nlp", "mbz_nlp2", "mbz_nlp2.07", "mbz_nlp3"]
+    def named(prefix, n, k, v, obj, epochs, extra, seed, hosts=hosts4):
+        j = job(f"{prefix}_k{k}v{v}_N{n}_{obj}_s{seed}", n, k, v, obj, epochs, extra, seed=seed, hosts=hosts)
+        j["gb"] = 18 if n >= 1024 else 8
+        return j
+    # issue 2: length curriculum and easy-negative warm-up, separately. OBJECTIVES adds --curriculum 0.5 to every cls job,
+    # so "neither" removes it; warm-up only = one stage at full length; length only = no heavily corrupted negatives
+    arms = {"both": "", "warm": " --cur_min {n}", "len": " --hard_min 1", "none": None}
+    curr = []
+    for arm, flags in arms.items():
+        for n in (64, 256, 1024):
+            for k, v in [(16, 16), (128, 128)]:
+                for seed in (0, 1, 2):
+                    extra = (flags or "").format(n=n) + (" --train_neg fresh" if n >= 1024 else "")
+                    j = named(f"curr_{arm}", n, k, v, "cls", 10, extra, seed)
+                    if flags is None:
+                        j["cmd"] = j["cmd"].replace(" --curriculum 0.5", "")
+                    curr.append(j)
+    (here / "jobs_curr.json").write_text(json.dumps(jobs_file("curr", curr), indent=1))
+    # issue 3: the same config and seed twice per host, on both GPU models (mbz_nlp2.07: RTX 5880; the others: RTX 6000)
+    repro = [job(f"repro2_{h.replace('.', '_')}_{rep}", 128, 16, 8, "cls", 10, " --diag_every 100", seed=0, hosts=[h])
+             for h in ("mbz_nlp", "mbz_nlp2", "mbz_nlp2.07") for rep in "ab"]
+    (here / "jobs_repro2.json").write_text(json.dumps(jobs_file("repro2", repro), indent=1))
+    # issue 4: fresh negatives at N=256, against the 6 stored-negative runs per cell (sweep seeds 0-2, experiment 5 seeds 3-5)
+    bridge = [named("bridge_fresh", 256, k, v, "cls", 10, " --train_neg fresh", seed) for k, v in [(16, 4), (16, 8)] for seed in range(6)]
+    (here / "jobs_bridge.json").write_text(json.dumps(jobs_file("bridge", bridge), indent=1))
+    # issue 7: 20 epochs with equal stages, to separate longer training from --cur_weight length (experiment 5's L arms)
+    epochs = [named(f"e20eq_{name}", 256, k, v, "cls", 20, flags, seed) for name, flags in (("base", ""), ("C", FIXES["C"]))
+              for k, v in [(16, 4), (16, 8)] for seed in FRESH_SEEDS]
+    (here / "jobs_epochs.json").write_text(json.dumps(jobs_file("epochs", epochs), indent=1))
     # probe the saved models with swap / shuffle / sum-preserving negatives, on one host that gets all of them
     probe = {"project": "surprise_memory", "sync": ["experiments/train_gdn2.py", "benchmark/generate.py", "experiments/probe_ckpt.py", "results/diag", "ckpt/diag"],
              "fetch": ["results/diag/probe.json"],
@@ -104,7 +135,7 @@ def main():
                        "gpus": 1, "gb": 8, "retries": 1, "hosts": ["mbz_nlp2"], "expect": ["results/diag/probe.json"]}]}
     (here / "jobs_probe.json").write_text(json.dumps(probe, indent=1))
     (here / "jobs_sweep_smoke.json").write_text(json.dumps(jobs_file("sweep_smoke", smoke), indent=1))
-    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs, {len(hard)} hard jobs, {len(long)} long jobs")
+    print(f"{len(sweep)} sweep jobs, {len(smoke)} smoke jobs, {len(seeds)} seed jobs, {len(fix)} fix jobs, {len(exp5)} exp5 jobs, {len(diag)} diag jobs, {len(hard)} hard jobs, {len(long)} long jobs, {len(curr)} curriculum, {len(repro)} repro, {len(bridge)} bridge, {len(epochs)} epoch jobs")
 
 
 if __name__ == "__main__":

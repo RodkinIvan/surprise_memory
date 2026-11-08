@@ -1,0 +1,90 @@
+{
+ "project": "surprise_memory",
+ "sync": [
+  "experiments/train_gdn2.py",
+  "benchmark/generate.py"
+ ],
+ "fetch": [
+  "results/repro2/{name}.json"
+ ],
+ "jobs": [
+  {
+   "name": "repro2_mbz_nlp_a",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --diag_every 100 --out results/repro2/repro2_mbz_nlp_a.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp"
+   ],
+   "expect": [
+    "results/repro2/repro2_mbz_nlp_a.json"
+   ]
+  },
+  {
+   "name": "repro2_mbz_nlp_b",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --diag_every 100 --out results/repro2/repro2_mbz_nlp_b.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp"
+   ],
+   "expect": [
+    "results/repro2/repro2_mbz_nlp_b.json"
+   ]
+  },
+  {
+   "name": "repro2_mbz_nlp2_a",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --diag_every 100 --out results/repro2/repro2_mbz_nlp2_a.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2"
+   ],
+   "expect": [
+    "results/repro2/repro2_mbz_nlp2_a.json"
+   ]
+  },
+  {
+   "name": "repro2_mbz_nlp2_b",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --diag_every 100 --out results/repro2/repro2_mbz_nlp2_b.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2"
+   ],
+   "expect": [
+    "results/repro2/repro2_mbz_nlp2_b.json"
+   ]
+  },
+  {
+   "name": "repro2_mbz_nlp2_07_a",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --diag_every 100 --out results/repro2/repro2_mbz_nlp2_07_a.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/repro2/repro2_mbz_nlp2_07_a.json"
+   ]
+  },
+  {
+   "name": "repro2_mbz_nlp2_07_b",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_gdn2.py --subset N128_V16 --objective cls --head_dim 16 --expand_v 0.5 --epochs 10 --seed 0 --curriculum 0.5 --diag_every 100 --out results/repro2/repro2_mbz_nlp2_07_b.json",
+   "gpus": 1,
+   "gb": 8,
+   "retries": 1,
+   "hosts": [
+    "mbz_nlp2.07"
+   ],
+   "expect": [
+    "results/repro2/repro2_mbz_nlp2_07_b.json"
+   ]
+  }
+ ]
+}
