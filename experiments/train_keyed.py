@@ -6,9 +6,10 @@ Input: [BOS] k1 s1 ... kN sN [QRY] kq candidate. Two objectives on the same back
   cls (recognition) "candidate is kq's sequence" logit read at the last token; negatives are 50% small edits of the true
                     sequence and 50% sequences stored under other keys (fresh random ones at N = 1), drawn at every step.
 
-Staged curriculum over the number of pairs: train stage_steps steps at N = 1, then at N = 2, 4, ..., each stage on that N's
-subset, and test on its test split at the end of the stage. lm runs stop after the first stage whose exact copy is below
---stop_below.
+Staged curriculum over the number of pairs, N = 1, 2, 4, ..., each stage on that N's subset. A stage trains until its
+validation score (exact copy for lm, acc9 for cls, on --val_samples samples every --eval_every steps) reaches --advance_at,
+or for --max_steps steps, then tests on the test split. lm runs stop after the first stage whose test exact copy is below
+--stop_below; cls runs go through every N.
 
 States below d_k = 16 run in fla's 16-wide kernel with the key and query projections masked to their first d_k channels. In
 GDN-2's update S <- (I - k (b*k)^T) Diag(exp g) S + k (w*v)^T, a key channel that is always 0 keeps its state row at 0, and
@@ -196,7 +197,10 @@ def main():
     p.add_argument("--hidden", type=int, default=32)
     p.add_argument("--layers", type=int, default=2)
     p.add_argument("--counts", type=int, nargs="+", default=kb.COUNTS, help="curriculum stages (numbers of pairs N), in order")
-    p.add_argument("--stage_steps", type=int, default=2000)
+    p.add_argument("--max_steps", type=int, default=20000, help="training budget of one stage")
+    p.add_argument("--eval_every", type=int, default=500)
+    p.add_argument("--val_samples", type=int, default=1000)
+    p.add_argument("--advance_at", type=float, default=0.95, help="move to the next N once the validation score reaches this")
     p.add_argument("--bs", type=int, default=128)
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--wd", type=float, default=0.1)
@@ -232,11 +236,14 @@ def main():
             root = Path(snapshot_download(REPO, repo_type="dataset", local_dir=a.data, allow_patterns=[f"{subset}/*"]))
         tr = {c: x.to(dev) for c, x in load(root, subset, "train", n, candidates=False).items()}
         te = load(root, subset, "test", n, candidates=True)
+        va = {c: x[:a.val_samples] for c, x in load(root, subset, "validation", n, candidates=True).items()}
         if a.test_samples:
             te = {c: x[:a.test_samples] for c, x in te.items()}
         eval_bs = max(1, min(7000, 2**20 // (9 * (n * (L + 1) + L + 3))))   # ~1M tokens per forward
+        metric = "recall_exact" if a.objective == "lm" else "recog_acc9"
         perm, pos, run_loss, run_acc, ts = torch.randperm(len(tr["query"]), device=dev, generator=gen), 0, 0.0, 0.0, time.time()
-        for _ in range(a.stage_steps):
+        history, stage_steps = [], 0
+        while stage_steps < a.max_steps:
             if pos + a.bs > len(perm):
                 perm, pos = torch.randperm(len(tr["query"]), device=dev, generator=gen), 0
             idx = perm[pos:pos + a.bs]
@@ -249,11 +256,18 @@ def main():
             opt.step()
             sched.step()
             step += 1
+            stage_steps += 1
             run_loss, run_acc = run_loss + loss.item(), run_acc + acc.item()
+            if stage_steps % a.eval_every == 0:
+                v = evaluate(model, a.objective, va, eval_bs, dev)[metric]
+                history.append([stage_steps, round(run_loss / a.eval_every, 5), round(v, 5)])
+                run_loss = run_acc = 0.0
+                if v >= a.advance_at:
+                    break
         ev = evaluate(model, a.objective, te, eval_bs, dev)
-        out["stages"].append({"N": n, "step": step, "train_loss": run_loss / a.stage_steps, "train_acc": run_acc / a.stage_steps,
-                              "stage_time": time.time() - ts, **ev})
-        print(f"N={n:<5} loss {run_loss / a.stage_steps:.4f} " + " ".join(f"{k} {v:.4f}" for k, v in ev.items())
+        out["stages"].append({"N": n, "step": step, "stage_steps": stage_steps, "mastered": history[-1][2] >= a.advance_at,
+                              "val_history": history, "stage_time": time.time() - ts, **ev})
+        print(f"N={n:<5} {stage_steps:>6} steps, val {metric} {history[-1][2]:.4f}; test " + " ".join(f"{k} {v:.4f}" for k, v in ev.items())
               + f"  ({time.time() - ts:.0f} s)", flush=True)
         out.update(train_time=time.time() - t0, peak_gb=torch.cuda.max_memory_allocated() / 2**30)
         stop = a.objective == "lm" and ev["recall_exact"] < stop_below

@@ -22,7 +22,7 @@
     "mbz_nlp2.07",
     "mbz_nlp3"
    ],
-   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 4 --v 4 --seed 0 --counts 1 4 1024 --stage_steps 60 --test_samples 300 --out results/keyed/keyed_smoke_k4_lm.json",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 4 --v 4 --seed 0 --counts 1 4 1024 --max_steps 100 --eval_every 50 --val_samples 200 --test_samples 300 --out results/keyed/keyed_smoke_k4_lm.json",
    "expect": [
     "results/keyed/keyed_smoke_k4_lm.json"
    ]
@@ -38,7 +38,7 @@
     "mbz_nlp2.07",
     "mbz_nlp3"
    ],
-   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 4 --v 4 --seed 0 --counts 1 4 1024 --stage_steps 60 --test_samples 300 --out results/keyed/keyed_smoke_k4_cls.json",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 4 --v 4 --seed 0 --counts 1 4 1024 --max_steps 100 --eval_every 50 --val_samples 200 --test_samples 300 --out results/keyed/keyed_smoke_k4_cls.json",
    "expect": [
     "results/keyed/keyed_smoke_k4_cls.json"
    ]
@@ -54,7 +54,7 @@
     "mbz_nlp2.07",
     "mbz_nlp3"
    ],
-   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 32 --v 32 --seed 0 --counts 1 4 1024 --stage_steps 60 --test_samples 300 --out results/keyed/keyed_smoke_k32_lm.json",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective lm --k 32 --v 32 --seed 0 --counts 1 4 1024 --max_steps 100 --eval_every 50 --val_samples 200 --test_samples 300 --out results/keyed/keyed_smoke_k32_lm.json",
    "expect": [
     "results/keyed/keyed_smoke_k32_lm.json"
    ]
@@ -70,7 +70,7 @@
     "mbz_nlp2.07",
     "mbz_nlp3"
    ],
-   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 32 --v 32 --seed 0 --counts 1 4 1024 --stage_steps 60 --test_samples 300 --out results/keyed/keyed_smoke_k32_cls.json",
+   "cmd": "/mnt/data/users/ivan.rodkin/lab/envs/memory_amplifier/bin/python experiments/train_keyed.py --objective cls --k 32 --v 32 --seed 0 --counts 1 4 1024 --max_steps 100 --eval_every 50 --val_samples 200 --test_samples 300 --out results/keyed/keyed_smoke_k32_cls.json",
    "expect": [
     "results/keyed/keyed_smoke_k32_cls.json"
    ]
