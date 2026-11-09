@@ -1,0 +1,77 @@
+{
+ "args": {
+  "objective": "lm",
+  "k": 4,
+  "v": 4,
+  "hidden": 32,
+  "layers": 2,
+  "counts": [
+   1,
+   4,
+   1024
+  ],
+  "stage_steps": 60,
+  "bs": 128,
+  "lr": 0.001,
+  "wd": 0.1,
+  "warmup": 500,
+  "test_samples": 300,
+  "stop_below": null,
+  "seed": 0,
+  "data": "data_keyed",
+  "out": "results/keyed/keyed_smoke_k4_lm.json"
+ },
+ "n_params": 120819,
+ "stages": [
+  {
+   "N": 1,
+   "step": 60,
+   "train_loss": 2.9270396629969277,
+   "train_acc": 0.060628255208333336,
+   "stage_time": 71.32079529762268,
+   "recall_exact": 0.0,
+   "recall_token_acc": 0.06602990033222592,
+   "nll_true": 2.8981148856026784,
+   "recog_acc9": 0.05647840531561462,
+   "pairwise_edit": 0.47259136212624586,
+   "pairwise_fresh": 0.5016611295681063
+  }
+ ],
+ "stopped": true,
+ "host": "ws006343",
+ "gpu": "NVIDIA RTX 6000 Ada Generation",
+ "code_version": {
+  "commit": "f3b523f5bcf8e226e0f63c3a07bb4f15e701299e",
+  "dirty": false,
+  "files_sha256": "c7d7e833548d7ce3786a9990789a6253c6a9afe1bfff4cf9ee2199f454cd8a43",
+  "paths": [
+   "benchmark/generate.py",
+   "benchmark/generate_keyed.py",
+   "data_keyed",
+   "experiments/train_gdn2.py",
+   "experiments/train_keyed.py"
+  ],
+  "exclude": [
+   "__pycache__",
+   "*.pyc",
+   ".git"
+  ],
+  "synced_at": "2026-11-08 22:04:31",
+  "from_host": "Ivans-MacBook-Pro.local"
+ },
+ "files_sha256": {
+  "train_gdn2.py": "4d7f8e61853a8381ed4829699edb763fa768643e3c198baa012110e220d006e5",
+  "generate.py": "92aea8b7c860a48e53a957ce0cfa8c5a61901a6a3734f030400f9e72437a5b15",
+  "train_keyed.py": "9a1accd6a0eba30434e393c688db993f29b57ea34dd59e2d170234810baeb97c",
+  "generate_keyed.py": "246e0b827754183e6d1e2a6f872c56f7336857b8ce9a5736e6c35f71af6557c2"
+ },
+ "versions": {
+  "torch": "2.6.0+cu124",
+  "fla": "0.5.2",
+  "triton": "3.2.0",
+  "cuda": "12.4",
+  "python": "3.11.11"
+ },
+ "train_time": 71.70143842697144,
+ "peak_gb": 0.28751325607299805
+}
